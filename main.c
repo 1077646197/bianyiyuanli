@@ -1,4 +1,4 @@
-﻿/*·程序定义
+/*·程序定义
 35464648489ktutvfkdt
 程序结构
 <程序> → <函数定义>
@@ -31,6 +31,13 @@
 <循环语句> → while (<表达式>) <语句>
 <声明语句> → <变量声明>
  */
+
+
+
+ //<输入输出语句> → printf(<字符串>); | scanf(<格式串>, <变量>);
+ //<格式串> → "%d" | "%f" | "%c"
+
+
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
@@ -100,7 +107,25 @@ int main()
         print_tables();
     }
     else {
-        printf("编译错误！！！！");
+        printf("ERROR");
     }
+//============================================================
+        // 初始化语法分析
+        token_index = 0;
+        current_token = lookahead(1);
+
+        // 语法分析
+        parse_program();
+        if (!iscorret) {
+            printf("\n语法分析失败\n");
+            return 1;
+        }
+
+        // 输出结果
+        printf("语法分析成功\n");
+        print_tables();
+        return 0;
+    }
+
     return 0;
 }
