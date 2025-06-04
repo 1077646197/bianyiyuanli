@@ -1,51 +1,52 @@
-/*·程序定义
+/*隆陇鲁脤脨貌露篓脪氓
 35464648489ktutvfkdt
-程序结构
-<程序> → <函数定义>
-<函数定义> → <返回类型> main() <函数体>
-<返回类型> → int | void
-<函数体> → { <语句列表> }
+鲁脤脨貌陆谩鹿鹿
+<鲁脤脨貌> 隆煤 <潞炉脢媒露篓脪氓>
+<潞炉脢媒露篓脪氓> 隆煤 <路碌禄脴脌脿脨脥> main() <潞炉脢媒脤氓>
+<路碌禄脴脌脿脨脥> 隆煤 int | void
+<潞炉脢媒脤氓> 隆煤 { <脫茂戮盲脕脨卤铆> }
 
-数据类型与变量
-<数据类型> → int | float | char
-<变量声明> → <数据类型> <标识符>;
-<标识符> → <字母><字母数字>*
-<字母> → a|b|...|z|A|B|...|Z
-<字母数字> → <字母>|<数字>
-<数字> → 0|1|...|9
+脢媒戮脻脌脿脨脥脫毛卤盲脕驴
+<脢媒戮脻脌脿脨脥> 隆煤 int | float | char
+<卤盲脕驴脡霉脙梅> 隆煤 <脢媒戮脻脌脿脨脥> <卤锚脢露路没>;
+<卤锚脢露路没> 隆煤 <脳脰脛赂><脳脰脛赂脢媒脳脰>*
+<脳脰脛赂> 隆煤 a|b|...|z|A|B|...|Z
+<脳脰脛赂脢媒脳脰> 隆煤 <脳脰脛赂>|<脢媒脳脰>
+<脢媒脳脰> 隆煤 0|1|...|9
 
-表达式
-<表达式> → <变量> | <常量> | <表达式><运算符><表达式>
-<变量> → <标识符>
-<常量> → <整数常量> | <字符常量>
-<整数常量> → [0-9]+
-<字符常量> → 'a'|'b'|...|'z'
-<运算符> → + | - | * | / | =
+卤铆麓茂脢陆
+<卤铆麓茂脢陆> 隆煤 <卤盲脕驴> | <鲁拢脕驴> | <卤铆麓茂脢陆><脭脣脣茫路没><卤铆麓茂脢陆>
+<卤盲脕驴> 隆煤 <卤锚脢露路没>
+<鲁拢脕驴> 隆煤 <脮没脢媒鲁拢脕驴> | <脳脰路没鲁拢脕驴>
+<脮没脢媒鲁拢脕驴> 隆煤 [0-9]+
+<脳脰路没鲁拢脕驴> 隆煤 'a'|'b'|...|'z'
+<脭脣脣茫路没> 隆煤 + | - | * | / | =
 
-语句
-<语句列表> → <语句> | <语句><语句列表>
-<语句> → <赋值语句> |   <条件语句> | <循环语句> | <声明语句>
-<赋值语句> → <变量> = <表达式>;
-<字符串> → "..."
-<条件语句> → if (<表达式>) <语句> | if (<表达式>) <语句> else <语句>
-<循环语句> → while (<表达式>) <语句>
-<声明语句> → <变量声明>
+脫茂戮盲
+<脫茂戮盲脕脨卤铆> 隆煤 <脫茂戮盲> | <脫茂戮盲><脫茂戮盲脕脨卤铆>
+<脫茂戮盲> 隆煤 <赂鲁脰碌脫茂戮盲> |   <脤玫录镁脫茂戮盲> | <脩颅禄路脫茂戮盲> | <脡霉脙梅脫茂戮盲>
+<赂鲁脰碌脫茂戮盲> 隆煤 <卤盲脕驴> = <卤铆麓茂脢陆>;
+<脳脰路没麓庐> 隆煤 "..."
+<脤玫录镁脫茂戮盲> 隆煤 if (<卤铆麓茂脢陆>) <脫茂戮盲> | if (<卤铆麓茂脢陆>) <脫茂戮盲> else <脫茂戮盲>
+<脩颅禄路脫茂戮盲> 隆煤 while (<卤铆麓茂脢陆>) <脫茂戮盲>
+<脡霉脙梅脫茂戮盲> 隆煤 <卤盲脕驴脡霉脙梅>
  */
 
 
 
- //<输入输出语句> → printf(<字符串>); | scanf(<格式串>, <变量>);
- //<格式串> → "%d" | "%f" | "%c"
+ //<脢盲脠毛脢盲鲁枚脫茂戮盲> 隆煤 printf(<脳脰路没麓庐>); | scanf(<赂帽脢陆麓庐>, <卤盲脕驴>);
+ //<赂帽脢陆麓庐> 隆煤 "%d" | "%f" | "%c"
 
 
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 
- // 关键字表，第一列是关键字，第二列是编号
+ // 鹿脴录眉脳脰卤铆拢卢碌脷脪禄脕脨脢脟鹿脴录眉脳脰拢卢碌脷露镁脕脨脢脟卤脿潞脜
 char* keywords[][2] = {
     {"int", "1"}, {"void", "2"}, {"break", "3"}, {"float", "4"}, {"while", "5"},
     {"do", "6"}, {"struct", "7"}, {"const", "8"}, {"case", "9"}, {"for", "10"},
@@ -53,7 +54,7 @@ char* keywords[][2] = {
 };
 int keyword_count = sizeof(keywords) / sizeof(keywords[0]);
 
-// 界符表，第一列是界符，第二列是编号
+// 陆莽路没卤铆拢卢碌脷脪禄脕脨脢脟陆莽路没拢卢碌脷露镁脕脨脢脟卤脿潞脜
 char* delimiters[][2] = {
     {"-", "1"}, {"/", "2"}, {"(", "3"}, {")", "4"}, {"==", "5"}, {"<=", "6"},
     {"<", "7"}, {"+", "8"}, {"*", "9"}, {">", "10"}, {"=", "11"}, {",", "12"},
@@ -61,27 +62,27 @@ char* delimiters[][2] = {
 };
 int delimiter_count = sizeof(delimiters) / sizeof(delimiters[0]);
 
-char identifiers[100][50]; // 标识符表
+char identifiers[100][50]; // 卤锚脢露路没卤铆
 int id_count = 0;
 
-char C1[100][50]; // 常整数表
+char C1[100][50]; // 鲁拢脮没脢媒卤铆
 int C1_count = 0;
 
-char C2[100][50]; // 常实数表
+char C2[100][50]; // 鲁拢脢碌脢媒卤铆
 int C2_count = 0;
 
-char CT[100][50]; // 字符常量表
+char CT[100][50]; // 脳脰路没鲁拢脕驴卤铆
 int CT_count = 0;
 
-char ST[100][50]; // 字符串常量表
+char ST[100][50]; // 脳脰路没麓庐鲁拢脕驴卤铆
 int ST_count = 0;
 
-char Token[100][50]; // Token串表
+char Token[100][50]; // Token麓庐卤铆
 int Token_count = 0;
 
-int iscorret = 1;//是否正确
+int iscorret = 1;//脢脟路帽脮媒脠路
 
-// 向标识符表添加元素
+// 脧貌卤锚脢露路没卤铆脤铆录脫脭陋脣脴
 void add_to_identifiers(const char* str) {
     for (int i = 0; i < id_count; i++) {
         if (strcmp(identifiers[i], str) == 0) return;
@@ -89,7 +90,7 @@ void add_to_identifiers(const char* str) {
     strcpy(identifiers[id_count++], str);
 }
 
-// 向常整数表添加元素
+// 脧貌鲁拢脮没脢媒卤铆脤铆录脫脭陋脣脴
 void add_to_C1(const char* str) {
     for (int i = 0; i < C1_count; i++) {
         if (strcmp(C1[i], str) == 0) return;
@@ -97,7 +98,7 @@ void add_to_C1(const char* str) {
     strcpy(C1[C1_count++], str);
 }
 
-// 向常实数表添加元素
+// 脧貌鲁拢脢碌脢媒卤铆脤铆录脫脭陋脣脴
 void add_to_C2(const char* str) {
     for (int i = 0; i < C2_count; i++) {
         if (strcmp(C2[i], str) == 0) return;
@@ -105,7 +106,7 @@ void add_to_C2(const char* str) {
     strcpy(C2[C2_count++], str);
 }
 
-// 向字符常量表添加元素
+// 脧貌脳脰路没鲁拢脕驴卤铆脤铆录脫脭陋脣脴
 void add_to_CT(const char* str) {
     for (int i = 0; i < CT_count; i++) {
         if (strcmp(CT[i], str) == 0) return;
@@ -113,7 +114,7 @@ void add_to_CT(const char* str) {
     strcpy(CT[CT_count++], str);
 }
 
-// 向字符串常量表添加元素
+// 脧貌脳脰路没麓庐鲁拢脕驴卤铆脤铆录脫脭陋脣脴
 void add_to_ST(const char* str) {
     for (int i = 0; i < ST_count; i++) {
         if (strcmp(ST[i], str) == 0) return;
@@ -121,7 +122,7 @@ void add_to_ST(const char* str) {
     strcpy(ST[ST_count++], str);
 }
 
-// 检查是否是关键字，是则返回编号，否则返回0
+// 录矛虏茅脢脟路帽脢脟鹿脴录眉脳脰拢卢脢脟脭貌路碌禄脴卤脿潞脜拢卢路帽脭貌路碌禄脴0
 int is_keyword(const char* str) {
     for (int i = 0; i < keyword_count; i++) {
         if (strcmp(keywords[i][0], str) == 0) return atoi(keywords[i][1]);
@@ -129,7 +130,7 @@ int is_keyword(const char* str) {
     return 0;
 }
 
-// 检查是否是界符，是则返回编号，否则返回0
+// 录矛虏茅脢脟路帽脢脟陆莽路没拢卢脢脟脭貌路碌禄脴卤脿潞脜拢卢路帽脭貌路碌禄脴0
 int is_delimiter(const char* str) {
     for (int i = 0; i < delimiter_count; i++) {
         if (strcmp(delimiters[i][0], str) == 0) return atoi(delimiters[i][1]);
@@ -137,20 +138,20 @@ int is_delimiter(const char* str) {
     return 0;
 }
 
-// 扫描输入字符串，识别各类单词并存储到Token数组
+// 脡篓脙猫脢盲脠毛脳脰路没麓庐拢卢脢露卤冒赂梅脌脿碌楼麓脢虏垄麓忙麓垄碌陆Token脢媒脳茅
 void scan(const char* source) {
     int i = 0;
     int n = strlen(source);
     while (i < n) {
-        while (isspace(source[i])) i++; // 跳过空白字符
+        while (isspace(source[i])) i++; // 脤酶鹿媒驴脮掳脳脳脰路没
         if (i >= n) break;
 
-        // 处理双字符界符
+        // 麓娄脌铆脣芦脳脰路没陆莽路没
         if (i + 1 < n) {
             char two[3] = { source[i], source[i + 1], '\0' };
             int delimiter_num = is_delimiter(two);
             if (delimiter_num) {
-                if (Token_count < 100) { // 防止数组越界
+                if (Token_count < 100) { // 路脌脰鹿脢媒脳茅脭陆陆莽
                     sprintf(Token[Token_count], "(P %d)", delimiter_num);
                     Token_count++;
                 }
@@ -159,7 +160,7 @@ void scan(const char* source) {
             }
         }
 
-        // 处理单字符界符
+        // 麓娄脌铆碌楼脳脰路没陆莽路没
         char one[2] = { source[i], '\0' };
         int delimiter_num = is_delimiter(one);
         if (delimiter_num) {
@@ -171,7 +172,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // 处理关键字或标识符
+        // 麓娄脌铆鹿脴录眉脳脰禄貌卤锚脢露路没
         if (isalpha(source[i]) || source[i] == '_') {
             char id[50] = { 0 };
             int j = 0;
@@ -196,7 +197,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // 处理字符常量
+        // 麓娄脌铆脳脰路没鲁拢脕驴
         if (source[i] == '\'') {
             i++;
             char ct[2] = { source[i], '\0' };
@@ -214,7 +215,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // 处理字符串常量
+        // 麓娄脌铆脳脰路没麓庐鲁拢脕驴
         if (source[i] == '"') {
             i++;
             char st[50] = { 0 };
@@ -232,7 +233,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // 处理数字（整数或浮点数）
+        // 麓娄脌铆脢媒脳脰拢篓脮没脢媒禄貌赂隆碌茫脢媒拢漏
         if (isdigit(source[i]) || source[i] == '0') {
             if (source[i] == '0') {
                 i++;
@@ -279,7 +280,7 @@ void scan(const char* source) {
                 if (i < n && (source[i] == '.' || (source[i] == 'e' || source[i] == 'E'))) {
                     char float_num[50];
                     sprintf(float_num, "%s", num);
-                    int float_valid = 1;  // 标记浮点数是否合法
+                    int float_valid = 1;  // 卤锚录脟赂隆碌茫脢媒脢脟路帽潞脧路篓
                     if (source[i] == '.') {
                         float_num[j++] = source[i++];
                         if (i < n && isdigit(source[i])) {
@@ -293,20 +294,20 @@ void scan(const char* source) {
                     }
                     if (i < n && (source[i] == 'e' || source[i] == 'E')) {
                         float_num[j++] = source[i++];
-                        int exp_start = j;  // 记录指数部分起始位置
+                        int exp_start = j;  // 录脟脗录脰赂脢媒虏驴路脰脝冒脢录脦禄脰脙
 
                         if (i < n && (source[i] == '+' || source[i] == '-')) {
                             float_num[j++] = source[i++];
                         }
 
-                        // 读取指数部分的数字
-                        int exp_digit_count = 0;  // 新增：统计指数部分数字个数
+                        // 露脕脠隆脰赂脢媒虏驴路脰碌脛脢媒脳脰
+                        int exp_digit_count = 0;  // 脨脗脭枚拢潞脥鲁录脝脰赂脢媒虏驴路脰脢媒脳脰赂枚脢媒
                         while (i < n && isdigit(source[i])) {
                             float_num[j++] = source[i++];
                             exp_digit_count++;
                         }
 
-                        // 检查指数部分是否有数字（如"12e+"中exp_digit_count=0）
+                        // 录矛虏茅脰赂脢媒虏驴路脰脢脟路帽脫脨脢媒脳脰拢篓脠莽"12e+"脰脨exp_digit_count=0拢漏
                         if (exp_digit_count == 0) {
                             float_valid = 0;
                         }
@@ -314,7 +315,7 @@ void scan(const char* source) {
 
                     float_num[j] = '\0';
 
-                    // 新增：若浮点数不合法，标记错误并返回
+                    // 脨脗脭枚拢潞脠么赂隆碌茫脢媒虏禄潞脧路篓拢卢卤锚录脟麓铆脦贸虏垄路碌禄脴
                     if (!float_valid) {
                         iscorret = 0;
                         return;
@@ -337,7 +338,7 @@ void scan(const char* source) {
             }
         }
 
-        // 处理以.开头的浮点数
+        // 麓娄脌铆脪脭.驴陋脥路碌脛赂隆碌茫脢媒
         if (source[i] == '.') {
             char float_num[50] = ".";
             i++;
@@ -371,7 +372,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // 其他错误情况
+        // 脝盲脣没麓铆脦贸脟茅驴枚
         if (Token_count < 100) {
             iscorret = 0;
         }
@@ -386,7 +387,7 @@ void print_token_sequence() {
     }
 }
 
-// 输出各表内容
+// 脢盲鲁枚赂梅卤铆脛脷脠脻
 void print_tables() {
     printf("\nI :");
     for (int i = 0; i < id_count; i++) {
@@ -418,7 +419,7 @@ void print_tables() {
 int main() {
     char source[1000];
     fgets(source, sizeof(source), stdin);
-    source[strcspn(source, "\n")] = '\0'; // 去除换行符
+    source[strcspn(source, "\n")] = '\0'; // 脠楼鲁媒禄禄脨脨路没
     scan(source);
     if (iscorret == 1) {
         print_token_sequence();
