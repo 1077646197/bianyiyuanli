@@ -115,7 +115,7 @@ int main()
         print_tables();
     }
     else {
-        printf("编译错误！！！！");
+        printf("编译失败，源程序存在错误！！！！");
     }
     return 0;
 }
