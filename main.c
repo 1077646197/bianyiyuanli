@@ -1,52 +1,51 @@
-/*¡¤³ÌÐò¶¨Òå
+/*·程序定义
 35464648489ktutvfkdt
-³ÌÐò½á¹¹
-<³ÌÐò> ¡ú <º¯Êý¶¨Òå>
-<º¯Êý¶¨Òå> ¡ú <·µ»ØÀàÐÍ> main() <º¯ÊýÌå>
-<·µ»ØÀàÐÍ> ¡ú int | void
-<º¯ÊýÌå> ¡ú { <Óï¾äÁÐ±í> }
+程序结构
+<程序> → <函数定义>
+<函数定义> → <返回类型> main() <函数体>
+<返回类型> → int | void
+<函数体> → { <语句列表> }
 
-Êý¾ÝÀàÐÍÓë±äÁ¿
-<Êý¾ÝÀàÐÍ> ¡ú int | float | char
-<±äÁ¿ÉùÃ÷> ¡ú <Êý¾ÝÀàÐÍ> <±êÊ¶·û>;
-<±êÊ¶·û> ¡ú <×ÖÄ¸><×ÖÄ¸Êý×Ö>*
-<×ÖÄ¸> ¡ú a|b|...|z|A|B|...|Z
-<×ÖÄ¸Êý×Ö> ¡ú <×ÖÄ¸>|<Êý×Ö>
-<Êý×Ö> ¡ú 0|1|...|9
+数据类型与变量
+<数据类型> → int | float | char
+<变量声明> → <数据类型> <标识符>;
+<标识符> → <字母><字母数字>*
+<字母> → a|b|...|z|A|B|...|Z
+<字母数字> → <字母>|<数字>
+<数字> → 0|1|...|9
 
-±í´ïÊ½
-<±í´ïÊ½> ¡ú <±äÁ¿> | <³£Á¿> | <±í´ïÊ½><ÔËËã·û><±í´ïÊ½>
-<±äÁ¿> ¡ú <±êÊ¶·û>
-<³£Á¿> ¡ú <ÕûÊý³£Á¿> | <×Ö·û³£Á¿>
-<ÕûÊý³£Á¿> ¡ú [0-9]+
-<×Ö·û³£Á¿> ¡ú 'a'|'b'|...|'z'
-<ÔËËã·û> ¡ú + | - | * | / | =
+表达式
+<表达式> → <变量> | <常量> | <表达式><运算符><表达式>
+<变量> → <标识符>
+<常量> → <整数常量> | <字符常量>
+<整数常量> → [0-9]+
+<字符常量> → 'a'|'b'|...|'z'
+<运算符> → + | - | * | / | =
 
-Óï¾ä
-<Óï¾äÁÐ±í> ¡ú <Óï¾ä> | <Óï¾ä><Óï¾äÁÐ±í>
-<Óï¾ä> ¡ú <¸³ÖµÓï¾ä> |   <Ìõ¼þÓï¾ä> | <Ñ­»·Óï¾ä> | <ÉùÃ÷Óï¾ä>
-<¸³ÖµÓï¾ä> ¡ú <±äÁ¿> = <±í´ïÊ½>;
-<×Ö·û´®> ¡ú "..."
-<Ìõ¼þÓï¾ä> ¡ú if (<±í´ïÊ½>) <Óï¾ä> | if (<±í´ïÊ½>) <Óï¾ä> else <Óï¾ä>
-<Ñ­»·Óï¾ä> ¡ú while (<±í´ïÊ½>) <Óï¾ä>
-<ÉùÃ÷Óï¾ä> ¡ú <±äÁ¿ÉùÃ÷>
+语句
+<语句列表> → <语句> | <语句><语句列表>
+<语句> → <赋值语句> |   <条件语句> | <循环语句> | <声明语句>
+<赋值语句> → <变量> = <表达式>;
+<字符串> → "..."
+<条件语句> → if (<表达式>) <语句> | if (<表达式>) <语句> else <语句>
+<循环语句> → while (<表达式>) <语句>
+<声明语句> → <变量声明>
  */
 
 
 
- //<ÊäÈëÊä³öÓï¾ä> ¡ú printf(<×Ö·û´®>); | scanf(<¸ñÊ½´®>, <±äÁ¿>);
- //<¸ñÊ½´®> ¡ú "%d" | "%f" | "%c"
+ //<输入输出语句> → printf(<字符串>); | scanf(<格式串>, <变量>);
+ //<格式串> → "%d" | "%f" | "%c"
 
 
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 
- // ¹Ø¼ü×Ö±í£¬µÚÒ»ÁÐÊÇ¹Ø¼ü×Ö£¬µÚ¶þÁÐÊÇ±àºÅ
+ // 关键字表，第一列是关键字，第二列是编号
 char* keywords[][2] = {
     {"int", "1"}, {"void", "2"}, {"break", "3"}, {"float", "4"}, {"while", "5"},
     {"do", "6"}, {"struct", "7"}, {"const", "8"}, {"case", "9"}, {"for", "10"},
@@ -54,7 +53,7 @@ char* keywords[][2] = {
 };
 int keyword_count = sizeof(keywords) / sizeof(keywords[0]);
 
-// ½ç·û±í£¬µÚÒ»ÁÐÊÇ½ç·û£¬µÚ¶þÁÐÊÇ±àºÅ
+// 界符表，第一列是界符，第二列是编号
 char* delimiters[][2] = {
     {"-", "1"}, {"/", "2"}, {"(", "3"}, {")", "4"}, {"==", "5"}, {"<=", "6"},
     {"<", "7"}, {"+", "8"}, {"*", "9"}, {">", "10"}, {"=", "11"}, {",", "12"},
@@ -62,27 +61,27 @@ char* delimiters[][2] = {
 };
 int delimiter_count = sizeof(delimiters) / sizeof(delimiters[0]);
 
-char identifiers[100][50]; // ±êÊ¶·û±í
+char identifiers[100][50]; // 标识符表
 int id_count = 0;
 
-char C1[100][50]; // ³£ÕûÊý±í
+char C1[100][50]; // 常整数表
 int C1_count = 0;
 
-char C2[100][50]; // ³£ÊµÊý±í
+char C2[100][50]; // 常实数表
 int C2_count = 0;
 
-char CT[100][50]; // ×Ö·û³£Á¿±í
+char CT[100][50]; // 字符常量表
 int CT_count = 0;
 
-char ST[100][50]; // ×Ö·û´®³£Á¿±í
+char ST[100][50]; // 字符串常量表
 int ST_count = 0;
 
-char Token[100][50]; // Token´®±í
+char Token[100][50]; // Token串表
 int Token_count = 0;
 
-int iscorret = 1;//ÊÇ·ñÕýÈ·
+int iscorret = 1;//是否正确
 
-// Ïò±êÊ¶·û±íÌí¼ÓÔªËØ
+// 向标识符表添加元素
 void add_to_identifiers(const char* str) {
     for (int i = 0; i < id_count; i++) {
         if (strcmp(identifiers[i], str) == 0) return;
@@ -90,7 +89,7 @@ void add_to_identifiers(const char* str) {
     strcpy(identifiers[id_count++], str);
 }
 
-// Ïò³£ÕûÊý±íÌí¼ÓÔªËØ
+// 向常整数表添加元素
 void add_to_C1(const char* str) {
     for (int i = 0; i < C1_count; i++) {
         if (strcmp(C1[i], str) == 0) return;
@@ -98,7 +97,7 @@ void add_to_C1(const char* str) {
     strcpy(C1[C1_count++], str);
 }
 
-// Ïò³£ÊµÊý±íÌí¼ÓÔªËØ
+// 向常实数表添加元素
 void add_to_C2(const char* str) {
     for (int i = 0; i < C2_count; i++) {
         if (strcmp(C2[i], str) == 0) return;
@@ -106,7 +105,7 @@ void add_to_C2(const char* str) {
     strcpy(C2[C2_count++], str);
 }
 
-// Ïò×Ö·û³£Á¿±íÌí¼ÓÔªËØ
+// 向字符常量表添加元素
 void add_to_CT(const char* str) {
     for (int i = 0; i < CT_count; i++) {
         if (strcmp(CT[i], str) == 0) return;
@@ -114,7 +113,7 @@ void add_to_CT(const char* str) {
     strcpy(CT[CT_count++], str);
 }
 
-// Ïò×Ö·û´®³£Á¿±íÌí¼ÓÔªËØ
+// 向字符串常量表添加元素
 void add_to_ST(const char* str) {
     for (int i = 0; i < ST_count; i++) {
         if (strcmp(ST[i], str) == 0) return;
@@ -122,7 +121,7 @@ void add_to_ST(const char* str) {
     strcpy(ST[ST_count++], str);
 }
 
-// ¼ì²éÊÇ·ñÊÇ¹Ø¼ü×Ö£¬ÊÇÔò·µ»Ø±àºÅ£¬·ñÔò·µ»Ø0
+// 检查是否是关键字，是则返回编号，否则返回0
 int is_keyword(const char* str) {
     for (int i = 0; i < keyword_count; i++) {
         if (strcmp(keywords[i][0], str) == 0) return atoi(keywords[i][1]);
@@ -130,7 +129,7 @@ int is_keyword(const char* str) {
     return 0;
 }
 
-// ¼ì²éÊÇ·ñÊÇ½ç·û£¬ÊÇÔò·µ»Ø±àºÅ£¬·ñÔò·µ»Ø0
+// 检查是否是界符，是则返回编号，否则返回0
 int is_delimiter(const char* str) {
     for (int i = 0; i < delimiter_count; i++) {
         if (strcmp(delimiters[i][0], str) == 0) return atoi(delimiters[i][1]);
@@ -138,20 +137,20 @@ int is_delimiter(const char* str) {
     return 0;
 }
 
-// É¨ÃèÊäÈë×Ö·û´®£¬Ê¶±ð¸÷Ààµ¥´Ê²¢´æ´¢µ½TokenÊý×é
+// 扫描输入字符串，识别各类单词并存储到Token数组
 void scan(const char* source) {
     int i = 0;
     int n = strlen(source);
     while (i < n) {
-        while (isspace(source[i])) i++; // Ìø¹ý¿Õ°××Ö·û
+        while (isspace(source[i])) i++; // 跳过空白字符
         if (i >= n) break;
 
-        // ´¦ÀíË«×Ö·û½ç·û
+        // 处理双字符界符
         if (i + 1 < n) {
             char two[3] = { source[i], source[i + 1], '\0' };
             int delimiter_num = is_delimiter(two);
             if (delimiter_num) {
-                if (Token_count < 100) { // ·ÀÖ¹Êý×éÔ½½ç
+                if (Token_count < 100) { // 防止数组越界
                     sprintf(Token[Token_count], "(P %d)", delimiter_num);
                     Token_count++;
                 }
@@ -160,7 +159,7 @@ void scan(const char* source) {
             }
         }
 
-        // ´¦Àíµ¥×Ö·û½ç·û
+        // 处理单字符界符
         char one[2] = { source[i], '\0' };
         int delimiter_num = is_delimiter(one);
         if (delimiter_num) {
@@ -172,7 +171,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ´¦Àí¹Ø¼ü×Ö»ò±êÊ¶·û
+        // 处理关键字或标识符
         if (isalpha(source[i]) || source[i] == '_') {
             char id[50] = { 0 };
             int j = 0;
@@ -197,7 +196,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ´¦Àí×Ö·û³£Á¿
+        // 处理字符常量
         if (source[i] == '\'') {
             i++;
             char ct[2] = { source[i], '\0' };
@@ -215,7 +214,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ´¦Àí×Ö·û´®³£Á¿
+        // 处理字符串常量
         if (source[i] == '"') {
             i++;
             char st[50] = { 0 };
@@ -233,7 +232,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ´¦ÀíÊý×Ö£¨ÕûÊý»ò¸¡µãÊý£©
+        // 处理数字（整数或浮点数）
         if (isdigit(source[i]) || source[i] == '0') {
             if (source[i] == '0') {
                 i++;
@@ -280,7 +279,7 @@ void scan(const char* source) {
                 if (i < n && (source[i] == '.' || (source[i] == 'e' || source[i] == 'E'))) {
                     char float_num[50];
                     sprintf(float_num, "%s", num);
-                    int float_valid = 1;  // ±ê¼Ç¸¡µãÊýÊÇ·ñºÏ·¨
+                    int float_valid = 1;  // 标记浮点数是否合法
                     if (source[i] == '.') {
                         float_num[j++] = source[i++];
                         if (i < n && isdigit(source[i])) {
@@ -294,20 +293,20 @@ void scan(const char* source) {
                     }
                     if (i < n && (source[i] == 'e' || source[i] == 'E')) {
                         float_num[j++] = source[i++];
-                        int exp_start = j;  // ¼ÇÂ¼Ö¸Êý²¿·ÖÆðÊ¼Î»ÖÃ
+                        int exp_start = j;  // 记录指数部分起始位置
 
                         if (i < n && (source[i] == '+' || source[i] == '-')) {
                             float_num[j++] = source[i++];
                         }
 
-                        // ¶ÁÈ¡Ö¸Êý²¿·ÖµÄÊý×Ö
-                        int exp_digit_count = 0;  // ÐÂÔö£ºÍ³¼ÆÖ¸Êý²¿·ÖÊý×Ö¸öÊý
+                        // 读取指数部分的数字
+                        int exp_digit_count = 0;  // 新增：统计指数部分数字个数
                         while (i < n && isdigit(source[i])) {
                             float_num[j++] = source[i++];
                             exp_digit_count++;
                         }
 
-                        // ¼ì²éÖ¸Êý²¿·ÖÊÇ·ñÓÐÊý×Ö£¨Èç"12e+"ÖÐexp_digit_count=0£©
+                        // 检查指数部分是否有数字（如"12e+"中exp_digit_count=0）
                         if (exp_digit_count == 0) {
                             float_valid = 0;
                         }
@@ -315,7 +314,7 @@ void scan(const char* source) {
 
                     float_num[j] = '\0';
 
-                    // ÐÂÔö£ºÈô¸¡µãÊý²»ºÏ·¨£¬±ê¼Ç´íÎó²¢·µ»Ø
+                    // 新增：若浮点数不合法，标记错误并返回
                     if (!float_valid) {
                         iscorret = 0;
                         return;
@@ -338,7 +337,7 @@ void scan(const char* source) {
             }
         }
 
-        // ´¦ÀíÒÔ.¿ªÍ·µÄ¸¡µãÊý
+        // 处理以.开头的浮点数
         if (source[i] == '.') {
             char float_num[50] = ".";
             i++;
@@ -372,7 +371,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ÆäËû´íÎóÇé¿ö
+        // 其他错误情况
         if (Token_count < 100) {
             iscorret = 0;
         }
@@ -387,7 +386,7 @@ void print_token_sequence() {
     }
 }
 
-// Êä³ö¸÷±íÄÚÈÝ
+// 输出各表内容
 void print_tables() {
     printf("\nI :");
     for (int i = 0; i < id_count; i++) {
@@ -419,7 +418,7 @@ void print_tables() {
 int main() {
     char source[1000];
     fgets(source, sizeof(source), stdin);
-    source[strcspn(source, "\n")] = '\0'; // È¥³ý»»ÐÐ·û
+    source[strcspn(source, "\n")] = '\0'; // 去除换行符
     scan(source);
     if (iscorret == 1) {
         print_token_sequence();
