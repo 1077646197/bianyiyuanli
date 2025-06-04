@@ -3,6 +3,6 @@
 #include "test3.h"
 int main()
 {
-	printf("helloworld");//46465445¿´¡¾å§Ñô¡¾k
+	printf("helloworld");//46465445¿´//fjeijf
 	return 0;
 }
