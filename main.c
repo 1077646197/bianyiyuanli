@@ -1,56 +1,56 @@
-/*¡¤³ÌĞò¶¨Òå
-³ÌĞò ¡ú ÉùÃ÷ÁĞ±í
-ÉùÃ÷ÁĞ±í ¡ú ÉùÃ÷ ÉùÃ÷ÁĞ±í | ¦Å
-ÉùÃ÷ ¡ú ±äÁ¿ÉùÃ÷ | ¸³ÖµÓï¾ä | ifÓï¾ä | whileÓï¾ä
+/*Â·ç¨‹åºå®šä¹‰
+ç¨‹åº â†’ å£°æ˜åˆ—è¡¨
+å£°æ˜åˆ—è¡¨ â†’ å£°æ˜ å£°æ˜åˆ—è¡¨ | Îµ
+å£°æ˜ â†’ å˜é‡å£°æ˜ | èµ‹å€¼è¯­å¥ | ifè¯­å¥ | whileè¯­å¥
 
-// ±äÁ¿ÉùÃ÷
-±äÁ¿ÉùÃ÷ ¡ú ÀàĞÍËµÃ÷·û ±êÊ¶·û ·ÖºÅ
-ÀàĞÍËµÃ÷·û ¡ú ÕûĞÍ | ¿ÕÀàĞÍ
+// å˜é‡å£°æ˜
+å˜é‡å£°æ˜ â†’ ç±»å‹è¯´æ˜ç¬¦ æ ‡è¯†ç¬¦ åˆ†å·
+ç±»å‹è¯´æ˜ç¬¦ â†’ æ•´å‹ | ç©ºç±»å‹
 
-// ¸³ÖµÓï¾ä
-¸³ÖµÓï¾ä ¡ú ±êÊ¶·û ¸³ÖµÔËËã·û ±í´ïÊ½ ·ÖºÅ
+// èµ‹å€¼è¯­å¥
+èµ‹å€¼è¯­å¥ â†’ æ ‡è¯†ç¬¦ èµ‹å€¼è¿ç®—ç¬¦ è¡¨è¾¾å¼ åˆ†å·
 
-// ±í´ïÊ½£¨±£³Ö²»±ä£©
-±í´ïÊ½ ¡ú ¼Ó·¨±í´ïÊ½
-¼Ó·¨±í´ïÊ½ ¡ú ³Ë·¨±í´ïÊ½ (¼Ó·¨ÔËËã·û ³Ë·¨±í´ïÊ½ | ¼õ·¨ÔËËã·û ³Ë·¨±í´ïÊ½)*
-³Ë·¨±í´ïÊ½ ¡ú »ù±¾±í´ïÊ½ (³Ë·¨ÔËËã·û »ù±¾±í´ïÊ½ | ³ı·¨ÔËËã·û »ù±¾±í´ïÊ½)*
-»ù±¾±í´ïÊ½ ¡ú ±êÊ¶·û | Êı×Ö | ×óÀ¨ºÅ ±í´ïÊ½ ÓÒÀ¨ºÅ
+// è¡¨è¾¾å¼ï¼ˆä¿æŒä¸å˜ï¼‰
+è¡¨è¾¾å¼ â†’ åŠ æ³•è¡¨è¾¾å¼
+åŠ æ³•è¡¨è¾¾å¼ â†’ ä¹˜æ³•è¡¨è¾¾å¼ (åŠ æ³•è¿ç®—ç¬¦ ä¹˜æ³•è¡¨è¾¾å¼ | å‡æ³•è¿ç®—ç¬¦ ä¹˜æ³•è¡¨è¾¾å¼)*
+ä¹˜æ³•è¡¨è¾¾å¼ â†’ åŸºæœ¬è¡¨è¾¾å¼ (ä¹˜æ³•è¿ç®—ç¬¦ åŸºæœ¬è¡¨è¾¾å¼ | é™¤æ³•è¿ç®—ç¬¦ åŸºæœ¬è¡¨è¾¾å¼)*
+åŸºæœ¬è¡¨è¾¾å¼ â†’ æ ‡è¯†ç¬¦ | æ•°å­— | å·¦æ‹¬å· è¡¨è¾¾å¼ å³æ‹¬å·
 
-// if Óï¾ä
-ifÓï¾ä ¡ú Èç¹û ×óÀ¨ºÅ Ìõ¼ş ÓÒÀ¨ºÅ ´úÂë¿é (·ñÔò ´úÂë¿é)?
-Ìõ¼ş ¡ú ±í´ïÊ½ ¹ØÏµÔËËã·û ±í´ïÊ½
-¹ØÏµÔËËã·û ¡ú ´óÓÚ | Ğ¡ÓÚ | µÈÓÚ | ²»µÈÓÚ | ´óÓÚµÈÓÚ | Ğ¡ÓÚµÈÓÚ
+// if è¯­å¥
+ifè¯­å¥ â†’ å¦‚æœ å·¦æ‹¬å· æ¡ä»¶ å³æ‹¬å· ä»£ç å— (å¦åˆ™ ä»£ç å—)?
+æ¡ä»¶ â†’ è¡¨è¾¾å¼ å…³ç³»è¿ç®—ç¬¦ è¡¨è¾¾å¼
+å…³ç³»è¿ç®—ç¬¦ â†’ å¤§äº | å°äº | ç­‰äº | ä¸ç­‰äº | å¤§äºç­‰äº | å°äºç­‰äº
 
-// while Ñ­»·
-whileÓï¾ä ¡ú µ± ×óÀ¨ºÅ Ìõ¼ş ÓÒÀ¨ºÅ ´úÂë¿é
+// while å¾ªç¯
+whileè¯­å¥ â†’ å½“ å·¦æ‹¬å· æ¡ä»¶ å³æ‹¬å· ä»£ç å—
 
-// ´úÂë¿é
-´úÂë¿é ¡ú ×ó»¨À¨ºÅ ÉùÃ÷ÁĞ±í ÓÒ»¨À¨ºÅ
+// ä»£ç å—
+ä»£ç å— â†’ å·¦èŠ±æ‹¬å· å£°æ˜åˆ—è¡¨ å³èŠ±æ‹¬å·
 
-// ÖÕ½á·û£¨´Ê·¨µ¥Ôª£©
-ÕûĞÍ : "int"
-¿ÕÀàĞÍ : "void"
-±êÊ¶·û : [a-zA-Z_][a-zA-Z0-9_]*
-Êı×Ö : [0-9]+
-·ÖºÅ : ";"
-¸³ÖµÔËËã·û : "="
-¼Ó·¨ÔËËã·û : "+"
-¼õ·¨ÔËËã·û : "-"
-³Ë·¨ÔËËã·û : "*"
-³ı·¨ÔËËã·û : "/"
-×óÀ¨ºÅ : "("
-ÓÒÀ¨ºÅ : ")"
-Èç¹û : "if"
-·ñÔò : "else"
-µ± : "while"
-×ó»¨À¨ºÅ : "{"
-ÓÒ»¨À¨ºÅ : "}"
-´óÓÚ : ">"
-Ğ¡ÓÚ : "<"
-µÈÓÚ : "=="
-²»µÈÓÚ : "!="
-´óÓÚµÈÓÚ : ">="
-Ğ¡ÓÚµÈÓÚ : "<="
+// ç»ˆç»“ç¬¦ï¼ˆè¯æ³•å•å…ƒï¼‰
+æ•´å‹ : "int"
+ç©ºç±»å‹ : "void"
+æ ‡è¯†ç¬¦ : [a-zA-Z_][a-zA-Z0-9_]*
+æ•°å­— : [0-9]+
+åˆ†å· : ";"
+èµ‹å€¼è¿ç®—ç¬¦ : "="
+åŠ æ³•è¿ç®—ç¬¦ : "+"
+å‡æ³•è¿ç®—ç¬¦ : "-"
+ä¹˜æ³•è¿ç®—ç¬¦ : "*"
+é™¤æ³•è¿ç®—ç¬¦ : "/"
+å·¦æ‹¬å· : "("
+å³æ‹¬å· : ")"
+å¦‚æœ : "if"
+å¦åˆ™ : "else"
+å½“ : "while"
+å·¦èŠ±æ‹¬å· : "{"
+å³èŠ±æ‹¬å· : "}"
+å¤§äº : ">"
+å°äº : "<"
+ç­‰äº : "=="
+ä¸ç­‰äº : "!="
+å¤§äºç­‰äº : ">="
+å°äºç­‰äº : "<="
  */
 
 
@@ -58,11 +58,12 @@ whileÓï¾ä ¡ú µ± ×óÀ¨ºÅ Ìõ¼ş ÓÒÀ¨ºÅ ´úÂë¿é
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 
- // ¹Ø¼ü×Ö±í£¬µÚÒ»ÁĞÊÇ¹Ø¼ü×Ö£¬µÚ¶şÁĞÊÇ±àºÅ
+ // Â¹Ã˜Â¼Ã¼Ã—Ã–Â±Ã­Â£Â¬ÂµÃšÃ’Â»ÃÃÃŠÃ‡Â¹Ã˜Â¼Ã¼Ã—Ã–Â£Â¬ÂµÃšÂ¶Ã¾ÃÃÃŠÃ‡Â±Ã ÂºÃ…
 char* keywords[][2] = {
     {"int", "1"}, {"void", "2"}, {"break", "3"}, {"float", "4"}, {"while", "5"},
     {"do", "6"}, {"struct", "7"}, {"const", "8"}, {"case", "9"}, {"for", "10"},
@@ -70,7 +71,7 @@ char* keywords[][2] = {
 };
 int keyword_count = sizeof(keywords) / sizeof(keywords[0]);
 
-// ½ç·û±í£¬µÚÒ»ÁĞÊÇ½ç·û£¬µÚ¶şÁĞÊÇ±àºÅ
+// Â½Ã§Â·Ã»Â±Ã­Â£Â¬ÂµÃšÃ’Â»ÃÃÃŠÃ‡Â½Ã§Â·Ã»Â£Â¬ÂµÃšÂ¶Ã¾ÃÃÃŠÃ‡Â±Ã ÂºÃ…
 char* delimiters[][2] = {
     {"-", "1"}, {"/", "2"}, {"(", "3"}, {")", "4"}, {"==", "5"}, {"<=", "6"},
     {"<", "7"}, {"+", "8"}, {"*", "9"}, {">", "10"}, {"=", "11"}, {",", "12"},
@@ -78,27 +79,27 @@ char* delimiters[][2] = {
 };
 int delimiter_count = sizeof(delimiters) / sizeof(delimiters[0]);
 
-char identifiers[100][50]; // ±êÊ¶·û±í
+char identifiers[100][50]; // Â±ÃªÃŠÂ¶Â·Ã»Â±Ã­
 int id_count = 0;
 
-char C1[100][50]; // ³£ÕûÊı±í
+char C1[100][50]; // Â³Â£Ã•Ã»ÃŠÃ½Â±Ã­
 int C1_count = 0;
 
-char C2[100][50]; // ³£ÊµÊı±í
+char C2[100][50]; // Â³Â£ÃŠÂµÃŠÃ½Â±Ã­
 int C2_count = 0;
 
-char CT[100][50]; // ×Ö·û³£Á¿±í
+char CT[100][50]; // Ã—Ã–Â·Ã»Â³Â£ÃÂ¿Â±Ã­
 int CT_count = 0;
 
-char ST[100][50]; // ×Ö·û´®³£Á¿±í
+char ST[100][50]; // Ã—Ã–Â·Ã»Â´Â®Â³Â£ÃÂ¿Â±Ã­
 int ST_count = 0;
 
-char Token[100][50]; // Token´®±í
+char Token[100][50]; // TokenÂ´Â®Â±Ã­
 int Token_count = 0;
 
-int iscorret = 1;//ÊÇ·ñÕıÈ·
+int iscorret = 1;//ÃŠÃ‡Â·Ã±Ã•Ã½ÃˆÂ·
 
-// Ïò±êÊ¶·û±íÌí¼ÓÔªËØ
+// ÃÃ²Â±ÃªÃŠÂ¶Â·Ã»Â±Ã­ÃŒÃ­Â¼Ã“Ã”ÂªÃ‹Ã˜
 void add_to_identifiers(const char* str) {
     for (int i = 0; i < id_count; i++) {
         if (strcmp(identifiers[i], str) == 0) return;
@@ -106,7 +107,7 @@ void add_to_identifiers(const char* str) {
     strcpy(identifiers[id_count++], str);
 }
 
-// Ïò³£ÕûÊı±íÌí¼ÓÔªËØ
+// ÃÃ²Â³Â£Ã•Ã»ÃŠÃ½Â±Ã­ÃŒÃ­Â¼Ã“Ã”ÂªÃ‹Ã˜
 void add_to_C1(const char* str) {
     for (int i = 0; i < C1_count; i++) {
         if (strcmp(C1[i], str) == 0) return;
@@ -114,7 +115,7 @@ void add_to_C1(const char* str) {
     strcpy(C1[C1_count++], str);
 }
 
-// Ïò³£ÊµÊı±íÌí¼ÓÔªËØ
+// ÃÃ²Â³Â£ÃŠÂµÃŠÃ½Â±Ã­ÃŒÃ­Â¼Ã“Ã”ÂªÃ‹Ã˜
 void add_to_C2(const char* str) {
     for (int i = 0; i < C2_count; i++) {
         if (strcmp(C2[i], str) == 0) return;
@@ -122,7 +123,7 @@ void add_to_C2(const char* str) {
     strcpy(C2[C2_count++], str);
 }
 
-// Ïò×Ö·û³£Á¿±íÌí¼ÓÔªËØ
+// ÃÃ²Ã—Ã–Â·Ã»Â³Â£ÃÂ¿Â±Ã­ÃŒÃ­Â¼Ã“Ã”ÂªÃ‹Ã˜
 void add_to_CT(const char* str) {
     for (int i = 0; i < CT_count; i++) {
         if (strcmp(CT[i], str) == 0) return;
@@ -130,7 +131,7 @@ void add_to_CT(const char* str) {
     strcpy(CT[CT_count++], str);
 }
 
-// Ïò×Ö·û´®³£Á¿±íÌí¼ÓÔªËØ
+// ÃÃ²Ã—Ã–Â·Ã»Â´Â®Â³Â£ÃÂ¿Â±Ã­ÃŒÃ­Â¼Ã“Ã”ÂªÃ‹Ã˜
 void add_to_ST(const char* str) {
     for (int i = 0; i < ST_count; i++) {
         if (strcmp(ST[i], str) == 0) return;
@@ -138,7 +139,7 @@ void add_to_ST(const char* str) {
     strcpy(ST[ST_count++], str);
 }
 
-// ¼ì²éÊÇ·ñÊÇ¹Ø¼ü×Ö£¬ÊÇÔò·µ»Ø±àºÅ£¬·ñÔò·µ»Ø0
+// Â¼Ã¬Â²Ã©ÃŠÃ‡Â·Ã±ÃŠÃ‡Â¹Ã˜Â¼Ã¼Ã—Ã–Â£Â¬ÃŠÃ‡Ã”Ã²Â·ÂµÂ»Ã˜Â±Ã ÂºÃ…Â£Â¬Â·Ã±Ã”Ã²Â·ÂµÂ»Ã˜0
 int is_keyword(const char* str) {
     for (int i = 0; i < keyword_count; i++) {
         if (strcmp(keywords[i][0], str) == 0) return atoi(keywords[i][1]);
@@ -146,7 +147,7 @@ int is_keyword(const char* str) {
     return 0;
 }
 
-// ¼ì²éÊÇ·ñÊÇ½ç·û£¬ÊÇÔò·µ»Ø±àºÅ£¬·ñÔò·µ»Ø0
+// Â¼Ã¬Â²Ã©ÃŠÃ‡Â·Ã±ÃŠÃ‡Â½Ã§Â·Ã»Â£Â¬ÃŠÃ‡Ã”Ã²Â·ÂµÂ»Ã˜Â±Ã ÂºÃ…Â£Â¬Â·Ã±Ã”Ã²Â·ÂµÂ»Ã˜0
 int is_delimiter(const char* str) {
     for (int i = 0; i < delimiter_count; i++) {
         if (strcmp(delimiters[i][0], str) == 0) return atoi(delimiters[i][1]);
@@ -154,20 +155,20 @@ int is_delimiter(const char* str) {
     return 0;
 }
 
-// É¨ÃèÊäÈë×Ö·û´®£¬Ê¶±ğ¸÷Ààµ¥´Ê²¢´æ´¢µ½TokenÊı×é
+// Ã‰Â¨ÃƒÃ¨ÃŠÃ¤ÃˆÃ«Ã—Ã–Â·Ã»Â´Â®Â£Â¬ÃŠÂ¶Â±Ã°Â¸Ã·Ã€Ã ÂµÂ¥Â´ÃŠÂ²Â¢Â´Ã¦Â´Â¢ÂµÂ½TokenÃŠÃ½Ã—Ã©
 void scan(const char* source) {
     int i = 0;
     int n = strlen(source);
     while (i < n) {
-        while (isspace(source[i])) i++; // Ìø¹ı¿Õ°××Ö·û
+        while (isspace(source[i])) i++; // ÃŒÃ¸Â¹Ã½Â¿Ã•Â°Ã—Ã—Ã–Â·Ã»
         if (i >= n) break;
 
-        // ´¦ÀíË«×Ö·û½ç·û
+        // Â´Â¦Ã€Ã­Ã‹Â«Ã—Ã–Â·Ã»Â½Ã§Â·Ã»
         if (i + 1 < n) {
             char two[3] = { source[i], source[i + 1], '\0' };
             int delimiter_num = is_delimiter(two);
             if (delimiter_num) {
-                if (Token_count < 100) { // ·ÀÖ¹Êı×éÔ½½ç
+                if (Token_count < 100) { // Â·Ã€Ã–Â¹ÃŠÃ½Ã—Ã©Ã”Â½Â½Ã§
                     sprintf(Token[Token_count], "(P %d)", delimiter_num);
                     Token_count++;
                 }
@@ -176,7 +177,7 @@ void scan(const char* source) {
             }
         }
 
-        // ´¦Àíµ¥×Ö·û½ç·û
+        // Â´Â¦Ã€Ã­ÂµÂ¥Ã—Ã–Â·Ã»Â½Ã§Â·Ã»
         char one[2] = { source[i], '\0' };
         int delimiter_num = is_delimiter(one);
         if (delimiter_num) {
@@ -188,7 +189,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ´¦Àí¹Ø¼ü×Ö»ò±êÊ¶·û
+        // Â´Â¦Ã€Ã­Â¹Ã˜Â¼Ã¼Ã—Ã–Â»Ã²Â±ÃªÃŠÂ¶Â·Ã»
         if (isalpha(source[i]) || source[i] == '_') {
             char id[50] = { 0 };
             int j = 0;
@@ -213,7 +214,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ´¦Àí×Ö·û³£Á¿
+        // Â´Â¦Ã€Ã­Ã—Ã–Â·Ã»Â³Â£ÃÂ¿
         if (source[i] == '\'') {
             i++;
             char ct[2] = { source[i], '\0' };
@@ -231,7 +232,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ´¦Àí×Ö·û´®³£Á¿
+        // Â´Â¦Ã€Ã­Ã—Ã–Â·Ã»Â´Â®Â³Â£ÃÂ¿
         if (source[i] == '"') {
             i++;
             char st[50] = { 0 };
@@ -249,7 +250,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ´¦ÀíÊı×Ö£¨ÕûÊı»ò¸¡µãÊı£©
+        // Â´Â¦Ã€Ã­ÃŠÃ½Ã—Ã–Â£Â¨Ã•Ã»ÃŠÃ½Â»Ã²Â¸Â¡ÂµÃ£ÃŠÃ½Â£Â©
         if (isdigit(source[i]) || source[i] == '0') {
             if (source[i] == '0') {
                 i++;
@@ -296,7 +297,7 @@ void scan(const char* source) {
                 if (i < n && (source[i] == '.' || (source[i] == 'e' || source[i] == 'E'))) {
                     char float_num[50];
                     sprintf(float_num, "%s", num);
-                    int float_valid = 1;  // ±ê¼Ç¸¡µãÊıÊÇ·ñºÏ·¨
+                    int float_valid = 1;  // Â±ÃªÂ¼Ã‡Â¸Â¡ÂµÃ£ÃŠÃ½ÃŠÃ‡Â·Ã±ÂºÃÂ·Â¨
                     if (source[i] == '.') {
                         float_num[j++] = source[i++];
                         if (i < n && isdigit(source[i])) {
@@ -310,20 +311,20 @@ void scan(const char* source) {
                     }
                     if (i < n && (source[i] == 'e' || source[i] == 'E')) {
                         float_num[j++] = source[i++];
-                        int exp_start = j;  // ¼ÇÂ¼Ö¸Êı²¿·ÖÆğÊ¼Î»ÖÃ
+                        int exp_start = j;  // Â¼Ã‡Ã‚Â¼Ã–Â¸ÃŠÃ½Â²Â¿Â·Ã–Ã†Ã°ÃŠÂ¼ÃÂ»Ã–Ãƒ
 
                         if (i < n && (source[i] == '+' || source[i] == '-')) {
                             float_num[j++] = source[i++];
                         }
 
-                        // ¶ÁÈ¡Ö¸Êı²¿·ÖµÄÊı×Ö
-                        int exp_digit_count = 0;  // ĞÂÔö£ºÍ³¼ÆÖ¸Êı²¿·ÖÊı×Ö¸öÊı
+                        // Â¶ÃÃˆÂ¡Ã–Â¸ÃŠÃ½Â²Â¿Â·Ã–ÂµÃ„ÃŠÃ½Ã—Ã–
+                        int exp_digit_count = 0;  // ÃÃ‚Ã”Ã¶Â£ÂºÃÂ³Â¼Ã†Ã–Â¸ÃŠÃ½Â²Â¿Â·Ã–ÃŠÃ½Ã—Ã–Â¸Ã¶ÃŠÃ½
                         while (i < n && isdigit(source[i])) {
                             float_num[j++] = source[i++];
                             exp_digit_count++;
                         }
 
-                        // ¼ì²éÖ¸Êı²¿·ÖÊÇ·ñÓĞÊı×Ö£¨Èç"12e+"ÖĞexp_digit_count=0£©
+                        // Â¼Ã¬Â²Ã©Ã–Â¸ÃŠÃ½Â²Â¿Â·Ã–ÃŠÃ‡Â·Ã±Ã“ÃÃŠÃ½Ã—Ã–Â£Â¨ÃˆÃ§"12e+"Ã–Ãexp_digit_count=0Â£Â©
                         if (exp_digit_count == 0) {
                             float_valid = 0;
                         }
@@ -331,7 +332,7 @@ void scan(const char* source) {
 
                     float_num[j] = '\0';
 
-                    // ĞÂÔö£ºÈô¸¡µãÊı²»ºÏ·¨£¬±ê¼Ç´íÎó²¢·µ»Ø
+                    // ÃÃ‚Ã”Ã¶Â£ÂºÃˆÃ´Â¸Â¡ÂµÃ£ÃŠÃ½Â²Â»ÂºÃÂ·Â¨Â£Â¬Â±ÃªÂ¼Ã‡Â´Ã­ÃÃ³Â²Â¢Â·ÂµÂ»Ã˜
                     if (!float_valid) {
                         iscorret = 0;
                         return;
@@ -354,7 +355,7 @@ void scan(const char* source) {
             }
         }
 
-        // ´¦ÀíÒÔ.¿ªÍ·µÄ¸¡µãÊı
+        // Â´Â¦Ã€Ã­Ã’Ã”.Â¿ÂªÃÂ·ÂµÃ„Â¸Â¡ÂµÃ£ÃŠÃ½
         if (source[i] == '.') {
             char float_num[50] = ".";
             i++;
@@ -388,7 +389,7 @@ void scan(const char* source) {
             continue;
         }
 
-        // ÆäËû´íÎóÇé¿ö
+        // Ã†Ã¤Ã‹Ã»Â´Ã­ÃÃ³Ã‡Ã©Â¿Ã¶
         if (Token_count < 100) {
             iscorret = 0;
         }
@@ -403,7 +404,7 @@ void print_token_sequence() {
     }
 }
 
-// Êä³ö¸÷±íÄÚÈİ
+// ÃŠÃ¤Â³Ã¶Â¸Ã·Â±Ã­Ã„ÃšÃˆÃ
 void print_tables() {
     printf("\nI :");
     for (int i = 0; i < id_count; i++) {
@@ -442,43 +443,43 @@ void print_tables() {
 
 
 
-// È«¾Ö±äÁ¿
-int token_index = 0;           // µ±Ç°TokenË÷Òı
-char* current_token;           // µ±Ç°Token
+// å…¨å±€å˜é‡
+int token_index = 0;           // å½“å‰Tokenç´¢å¼•
+char* current_token;           // å½“å‰Token
 
-// ÏòÇ°²é¿´n¸öToken
+// å‘å‰æŸ¥çœ‹nä¸ªToken
 char* lookahead(int n);
-// ÏûºÄµ±Ç°Token²¢ÒÆ¶¯µ½ÏÂÒ»¸ö
+// æ¶ˆè€—å½“å‰Tokenå¹¶ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ª
 void consume();
-// Æ¥ÅäÌØ¶¨ÀàĞÍµÄToken²¢ÏûºÄ
+// åŒ¹é…ç‰¹å®šç±»å‹çš„Tokenå¹¶æ¶ˆè€—
 void match(const char* token_type);
-// ´íÎó´¦Àí
+// é”™è¯¯å¤„ç†
 void syntax_error(const char* message);
-// ½âÎöº¯Êı£¨¶ÔÓ¦ÎÄ·¨·ÇÖÕ½á·û£©
-void parse_program();           // ³ÌĞò ¡ú ÉùÃ÷ÁĞ±í
-void parse_declaration_list();  // ÉùÃ÷ÁĞ±í ¡ú ÉùÃ÷ ÉùÃ÷ÁĞ±í | ¦Å
-void parse_declaration();       // ÉùÃ÷ ¡ú ±äÁ¿ÉùÃ÷ | ¸³ÖµÓï¾ä | ifÓï¾ä | whileÓï¾ä
-void parse_var_decl();          // ±äÁ¿ÉùÃ÷ ¡ú ÀàĞÍËµÃ÷·û ±êÊ¶·û ·ÖºÅ
-void parse_type_specifier();    // ÀàĞÍËµÃ÷·û ¡ú ÕûĞÍ | ¿ÕÀàĞÍ
-void parse_assign_stmt();       // ¸³ÖµÓï¾ä ¡ú ±êÊ¶·û ¸³ÖµÔËËã·û ±í´ïÊ½ ·ÖºÅ
-void parse_if_stmt();           // ifÓï¾ä ¡ú Èç¹û ×óÀ¨ºÅ Ìõ¼ş ÓÒÀ¨ºÅ ´úÂë¿é (·ñÔò ´úÂë¿é)?
-void parse_while_stmt();        // whileÓï¾ä ¡ú µ± ×óÀ¨ºÅ Ìõ¼ş ÓÒÀ¨ºÅ ´úÂë¿é
-void parse_condition();         // Ìõ¼ş ¡ú ±í´ïÊ½ ¹ØÏµÔËËã·û ±í´ïÊ½
-void parse_relop();             // ¹ØÏµÔËËã·û ¡ú ´óÓÚ | Ğ¡ÓÚ | µÈÓÚ | ²»µÈÓÚ | ´óÓÚµÈÓÚ | Ğ¡ÓÚµÈÓÚ
-void parse_block();             // ´úÂë¿é ¡ú ×ó»¨À¨ºÅ ÉùÃ÷ÁĞ±í ÓÒ»¨À¨ºÅ
-void parse_expr();              // ±í´ïÊ½ ¡ú ¼Ó·¨±í´ïÊ½
-void parse_additive_expr();     // ¼Ó·¨±í´ïÊ½ ¡ú ³Ë·¨±í´ïÊ½ (¼Ó·¨ÔËËã·û ³Ë·¨±í´ïÊ½ | ¼õ·¨ÔËËã·û ³Ë·¨±í´ïÊ½)*
-void parse_multiplicative_expr(); // ³Ë·¨±í´ïÊ½ ¡ú »ù±¾±í´ïÊ½ (³Ë·¨ÔËËã·û »ù±¾±í´ïÊ½ | ³ı·¨ÔËËã·û »ù±¾±í´ïÊ½)*
-void parse_primary_expr();      // »ù±¾±í´ïÊ½ ¡ú ±êÊ¶·û | Êı×Ö | ×óÀ¨ºÅ ±í´ïÊ½ ÓÒÀ¨ºÅ
+// è§£æå‡½æ•°ï¼ˆå¯¹åº”æ–‡æ³•éç»ˆç»“ç¬¦ï¼‰
+void parse_program();           // ç¨‹åº â†’ å£°æ˜åˆ—è¡¨
+void parse_declaration_list();  // å£°æ˜åˆ—è¡¨ â†’ å£°æ˜ å£°æ˜åˆ—è¡¨ | Îµ
+void parse_declaration();       // å£°æ˜ â†’ å˜é‡å£°æ˜ | èµ‹å€¼è¯­å¥ | ifè¯­å¥ | whileè¯­å¥
+void parse_var_decl();          // å˜é‡å£°æ˜ â†’ ç±»å‹è¯´æ˜ç¬¦ æ ‡è¯†ç¬¦ åˆ†å·
+void parse_type_specifier();    // ç±»å‹è¯´æ˜ç¬¦ â†’ æ•´å‹ | ç©ºç±»å‹
+void parse_assign_stmt();       // èµ‹å€¼è¯­å¥ â†’ æ ‡è¯†ç¬¦ èµ‹å€¼è¿ç®—ç¬¦ è¡¨è¾¾å¼ åˆ†å·
+void parse_if_stmt();           // ifè¯­å¥ â†’ å¦‚æœ å·¦æ‹¬å· æ¡ä»¶ å³æ‹¬å· ä»£ç å— (å¦åˆ™ ä»£ç å—)?
+void parse_while_stmt();        // whileè¯­å¥ â†’ å½“ å·¦æ‹¬å· æ¡ä»¶ å³æ‹¬å· ä»£ç å—
+void parse_condition();         // æ¡ä»¶ â†’ è¡¨è¾¾å¼ å…³ç³»è¿ç®—ç¬¦ è¡¨è¾¾å¼
+void parse_relop();             // å…³ç³»è¿ç®—ç¬¦ â†’ å¤§äº | å°äº | ç­‰äº | ä¸ç­‰äº | å¤§äºç­‰äº | å°äºç­‰äº
+void parse_block();             // ä»£ç å— â†’ å·¦èŠ±æ‹¬å· å£°æ˜åˆ—è¡¨ å³èŠ±æ‹¬å·
+void parse_expr();              // è¡¨è¾¾å¼ â†’ åŠ æ³•è¡¨è¾¾å¼
+void parse_additive_expr();     // åŠ æ³•è¡¨è¾¾å¼ â†’ ä¹˜æ³•è¡¨è¾¾å¼ (åŠ æ³•è¿ç®—ç¬¦ ä¹˜æ³•è¡¨è¾¾å¼ | å‡æ³•è¿ç®—ç¬¦ ä¹˜æ³•è¡¨è¾¾å¼)*
+void parse_multiplicative_expr(); // ä¹˜æ³•è¡¨è¾¾å¼ â†’ åŸºæœ¬è¡¨è¾¾å¼ (ä¹˜æ³•è¿ç®—ç¬¦ åŸºæœ¬è¡¨è¾¾å¼ | é™¤æ³•è¿ç®—ç¬¦ åŸºæœ¬è¡¨è¾¾å¼)*
+void parse_primary_expr();      // åŸºæœ¬è¡¨è¾¾å¼ â†’ æ ‡è¯†ç¬¦ | æ•°å­— | å·¦æ‹¬å· è¡¨è¾¾å¼ å³æ‹¬å·
 
 char* lookahead(int n) {
     if (token_index + n - 1 < Token_count) {
         return Token[token_index + n - 1];
     }
-    return NULL; // µ½´ïTokenÁ÷Ä©Î²
+    return NULL; // åˆ°è¾¾Tokenæµæœ«å°¾
 }
 
-// ÏûºÄµ±Ç°Token²¢ÒÆ¶¯µ½ÏÂÒ»¸ö
+// æ¶ˆè€—å½“å‰Tokenå¹¶ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ª
 void consume() {
     if (token_index < Token_count) {
         token_index++;
@@ -489,58 +490,58 @@ void consume() {
     }
 }
 
-// Æ¥ÅäÌØ¶¨ÀàĞÍµÄToken²¢ÏûºÄ
+// åŒ¹é…ç‰¹å®šç±»å‹çš„Tokenå¹¶æ¶ˆè€—
 void match(const char* token_type) {
     if (current_token && strstr(current_token, token_type)) {
         consume();
     }
     else {
         char error_msg[100];
-        sprintf(error_msg, "ÆÚÍû %s£¬È´·¢ÏÖ %s", token_type, current_token ? current_token : "EOF");
+        sprintf(error_msg, "æœŸæœ› %sï¼Œå´å‘ç° %s", token_type, current_token ? current_token : "EOF");
         syntax_error(error_msg);
     }
 }
 
 
-// Óï·¨´íÎó´¦Àí
+// è¯­æ³•é”™è¯¯å¤„ç†
 void syntax_error(const char* message) {
-    printf("Óï·¨´íÎó: %s\n", message);
-    iscorret = 0; // Óë´Ê·¨·ÖÎöµÄ´íÎó±êÖ¾Í³Ò»
+    printf("è¯­æ³•é”™è¯¯: %s\n", message);
+    iscorret = 0; // ä¸è¯æ³•åˆ†æçš„é”™è¯¯æ ‡å¿—ç»Ÿä¸€
 }
 
-// ½âÎö³ÌĞò£ºprogram ¡ú ÉùÃ÷ÁĞ±í
+// è§£æç¨‹åºï¼šprogram â†’ å£°æ˜åˆ—è¡¨
 void parse_program() {
     parse_declaration_list();
-    // ³ÌĞò½áÊøÊ±Ó¦ÎŞÊ£ÓàToken
+    // ç¨‹åºç»“æŸæ—¶åº”æ— å‰©ä½™Token
     if (token_index < Token_count) {
-        syntax_error("³ÌĞòÄ©Î²´æÔÚ¶àÓàToken");
+        syntax_error("ç¨‹åºæœ«å°¾å­˜åœ¨å¤šä½™Token");
     }
 }
 
-// ½âÎöÉùÃ÷ÁĞ±í£ºdeclaration_list ¡ú ÉùÃ÷ ÉùÃ÷ÁĞ±í | ¦Å
+// è§£æå£°æ˜åˆ—è¡¨ï¼šdeclaration_list â†’ å£°æ˜ å£°æ˜åˆ—è¡¨ | Îµ
 void parse_declaration_list() {
     if (current_token &&
         (strstr(current_token, "(K 1)") ||   // int
             strstr(current_token, "(K 2)") ||   // void
-            strstr(current_token, "(I ") ||     // ±êÊ¶·û£¨¸³ÖµÓï¾ä/if/while£©
+            strstr(current_token, "(I ") ||     // æ ‡è¯†ç¬¦ï¼ˆèµ‹å€¼è¯­å¥/if/whileï¼‰
             strstr(current_token, "(K 12)") ||  // if
             strstr(current_token, "(K 5)"))) {  // while
         parse_declaration();
         parse_declaration_list();
     }
-    // ¿Õ²úÉúÊ½Çé¿ö£º²»×ö´¦Àí
+    // ç©ºäº§ç”Ÿå¼æƒ…å†µï¼šä¸åšå¤„ç†
 }
 
-// ½âÎöÉùÃ÷£ºdeclaration ¡ú ±äÁ¿ÉùÃ÷ | ¸³ÖµÓï¾ä | ifÓï¾ä | whileÓï¾ä
+// è§£æå£°æ˜ï¼šdeclaration â†’ å˜é‡å£°æ˜ | èµ‹å€¼è¯­å¥ | ifè¯­å¥ | whileè¯­å¥
 void parse_declaration() {
     if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)")) {
-        // ±äÁ¿ÉùÃ÷
+        // å˜é‡å£°æ˜
         parse_var_decl();
     }
     else if (strstr(current_token, "(I ")) {
-        // ¼ì²éÏÂÒ»¸öTokenÒÔÇø·Ö¸³ÖµÓï¾ä/if/while
+        // æ£€æŸ¥ä¸‹ä¸€ä¸ªTokenä»¥åŒºåˆ†èµ‹å€¼è¯­å¥/if/while
         char* next_token = lookahead(2);
-        if (next_token && strstr(next_token, "(P 11)")) { // ¸³ÖµÔËËã·û"="
+        if (next_token && strstr(next_token, "(P 11)")) { // èµ‹å€¼è¿ç®—ç¬¦"="
             parse_assign_stmt();
         }
         else if (lookahead(2) && strstr(lookahead(2), "(P 3)")) { // "("
@@ -551,54 +552,54 @@ void parse_declaration() {
                 parse_while_stmt();
             }
             else {
-                syntax_error("·Ç·¨µÄÓï¾ä¿ªÍ·");
+                syntax_error("éæ³•çš„è¯­å¥å¼€å¤´");
             }
         }
         else {
-            syntax_error("ÎŞ·¨Ê¶±ğµÄÉùÃ÷ÀàĞÍ");
+            syntax_error("æ— æ³•è¯†åˆ«çš„å£°æ˜ç±»å‹");
         }
     }
     else {
-        syntax_error("È±ÉÙÉùÃ÷");
+        syntax_error("ç¼ºå°‘å£°æ˜");
     }
 }
 
-// ½âÎö±äÁ¿ÉùÃ÷£ºvar_decl ¡ú ÀàĞÍËµÃ÷·û ±êÊ¶·û ·ÖºÅ
+// è§£æå˜é‡å£°æ˜ï¼švar_decl â†’ ç±»å‹è¯´æ˜ç¬¦ æ ‡è¯†ç¬¦ åˆ†å·
 void parse_var_decl() {
     parse_type_specifier();
     if (current_token && strstr(current_token, "(I ")) {
-        consume(); // ÏûºÄ±êÊ¶·û
-        if (current_token && strstr(current_token, "(P 13)")) { // ·ÖºÅ";"
-            consume(); // ÏûºÄ·ÖºÅ
+        consume(); // æ¶ˆè€—æ ‡è¯†ç¬¦
+        if (current_token && strstr(current_token, "(P 13)")) { // åˆ†å·";"
+            consume(); // æ¶ˆè€—åˆ†å·
         }
         else {
-            syntax_error("±äÁ¿ÉùÃ÷È±ÉÙ·ÖºÅ");
+            syntax_error("å˜é‡å£°æ˜ç¼ºå°‘åˆ†å·");
         }
     }
     else {
-        syntax_error("±äÁ¿ÉùÃ÷È±ÉÙ±êÊ¶·û");
+        syntax_error("å˜é‡å£°æ˜ç¼ºå°‘æ ‡è¯†ç¬¦");
     }
 }
 
-// ½âÎöÀàĞÍËµÃ÷·û£ºtype_specifier ¡ú ÕûĞÍ | ¿ÕÀàĞÍ
+// è§£æç±»å‹è¯´æ˜ç¬¦ï¼štype_specifier â†’ æ•´å‹ | ç©ºç±»å‹
 void parse_type_specifier() {
     if (current_token && (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)"))) {
-        consume(); // ÏûºÄÀàĞÍËµÃ÷·û
+        consume(); // æ¶ˆè€—ç±»å‹è¯´æ˜ç¬¦
     }
     else {
-        syntax_error("È±ÉÙÀàĞÍËµÃ÷·û");
+        syntax_error("ç¼ºå°‘ç±»å‹è¯´æ˜ç¬¦");
     }
 }
 
-// ½âÎö¸³ÖµÓï¾ä£ºassign_stmt ¡ú ±êÊ¶·û ¸³ÖµÔËËã·û ±í´ïÊ½ ·ÖºÅ
+// è§£æèµ‹å€¼è¯­å¥ï¼šassign_stmt â†’ æ ‡è¯†ç¬¦ èµ‹å€¼è¿ç®—ç¬¦ è¡¨è¾¾å¼ åˆ†å·
 void parse_assign_stmt() {
-    match("(I "); // ±êÊ¶·û
-    match("(P 11)"); // ¸³ÖµÔËËã·û"="
+    match("(I "); // æ ‡è¯†ç¬¦
+    match("(P 11)"); // èµ‹å€¼è¿ç®—ç¬¦"="
     parse_expr();
-    match("(P 13)"); // ·ÖºÅ";"
+    match("(P 13)"); // åˆ†å·";"
 }
 
-// ½âÎöifÓï¾ä£ºif_stmt ¡ú Èç¹û ×óÀ¨ºÅ Ìõ¼ş ÓÒÀ¨ºÅ ´úÂë¿é (·ñÔò ´úÂë¿é)?
+// è§£æifè¯­å¥ï¼šif_stmt â†’ å¦‚æœ å·¦æ‹¬å· æ¡ä»¶ å³æ‹¬å· ä»£ç å— (å¦åˆ™ ä»£ç å—)?
 void parse_if_stmt() {
     match("(K 12)"); // "if"
     match("(P 3)"); // "("
@@ -606,14 +607,14 @@ void parse_if_stmt() {
     match("(P 4)"); // ")"
     parse_block();
 
-    // ¿ÉÑ¡µÄelse²¿·Ö
+    // å¯é€‰çš„elseéƒ¨åˆ†
     if (current_token && strstr(current_token, "(K 14)")) { // "else"
         consume();
         parse_block();
     }
 }
 
-// ½âÎöwhileÓï¾ä£ºwhile_stmt ¡ú µ± ×óÀ¨ºÅ Ìõ¼ş ÓÒÀ¨ºÅ ´úÂë¿é
+// è§£æwhileè¯­å¥ï¼šwhile_stmt â†’ å½“ å·¦æ‹¬å· æ¡ä»¶ å³æ‹¬å· ä»£ç å—
 void parse_while_stmt() {
     match("(K 5)"); // "while"
     match("(P 3)"); // "("
@@ -622,66 +623,66 @@ void parse_while_stmt() {
     parse_block();
 }
 
-// ½âÎöÌõ¼ş£ºcondition ¡ú ±í´ïÊ½ ¹ØÏµÔËËã·û ±í´ïÊ½
+// è§£ææ¡ä»¶ï¼šcondition â†’ è¡¨è¾¾å¼ å…³ç³»è¿ç®—ç¬¦ è¡¨è¾¾å¼
 void parse_condition() {
     parse_expr();
     parse_relop();
     parse_expr();
 }
 
-// ½âÎö¹ØÏµÔËËã·û£ºrelop ¡ú ´óÓÚ | Ğ¡ÓÚ | µÈÓÚ | ²»µÈÓÚ | ´óÓÚµÈÓÚ | Ğ¡ÓÚµÈÓÚ
+// è§£æå…³ç³»è¿ç®—ç¬¦ï¼šrelop â†’ å¤§äº | å°äº | ç­‰äº | ä¸ç­‰äº | å¤§äºç­‰äº | å°äºç­‰äº
 void parse_relop() {
     if (current_token && (strstr(current_token, "(P 10)") ||  // ">"
         strstr(current_token, "(P 7)") ||   // "<"
         strstr(current_token, "(P 5)") ||   // "=="
-        strstr(current_token, "(P 11)") ||  // "=" (¸³Öµ£¬ĞèÇø·Ö)
+        strstr(current_token, "(P 11)") ||  // "=" (èµ‹å€¼ï¼Œéœ€åŒºåˆ†)
         strstr(current_token, "(P 6)"))) {  // "<="
         consume();
     }
     else {
-        syntax_error("È±ÉÙ¹ØÏµÔËËã·û");
+        syntax_error("ç¼ºå°‘å…³ç³»è¿ç®—ç¬¦");
     }
 }
 
-// ½âÎö´úÂë¿é£ºblock ¡ú ×ó»¨À¨ºÅ ÉùÃ÷ÁĞ±í ÓÒ»¨À¨ºÅ
+// è§£æä»£ç å—ï¼šblock â†’ å·¦èŠ±æ‹¬å· å£°æ˜åˆ—è¡¨ å³èŠ±æ‹¬å·
 void parse_block() {
     match("(P 15)"); // "{"
     parse_declaration_list();
     match("(P 16)"); // "}"
 }
 
-// ½âÎö±í´ïÊ½£¨¼ò»¯Ê¾Àı£¬ÍêÕûÊµÏÖĞè·Ö²ã´¦Àí¼Ó¼õ³Ë³ı£©
+// è§£æè¡¨è¾¾å¼ï¼ˆç®€åŒ–ç¤ºä¾‹ï¼Œå®Œæ•´å®ç°éœ€åˆ†å±‚å¤„ç†åŠ å‡ä¹˜é™¤ï¼‰
 void parse_expr() {
     parse_additive_expr();
 }
 
-//½âÎö¼Ó·¨±í´ïÊ½
+//è§£æåŠ æ³•è¡¨è¾¾å¼
 void parse_additive_expr() {
     parse_multiplicative_expr();
     while (current_token && (strstr(current_token, "(P 8)") || strstr(current_token, "(P 1)"))){
-        // ¼Ó·¨ÔËËã·û"+"»ò¼õ·¨ÔËËã·û"-"
+        // åŠ æ³•è¿ç®—ç¬¦"+"æˆ–å‡æ³•è¿ç®—ç¬¦"-"
         consume();
         parse_multiplicative_expr();
     }
 }
 
-// ½âÎö³Ë·¨±í´ïÊ½£ºmultiplicative_expr ¡ú »ù±¾±í´ïÊ½ (³Ë·¨ÔËËã·û »ù±¾±í´ïÊ½ | ³ı·¨ÔËËã·û »ù±¾±í´ïÊ½)*
+// è§£æä¹˜æ³•è¡¨è¾¾å¼ï¼šmultiplicative_expr â†’ åŸºæœ¬è¡¨è¾¾å¼ (ä¹˜æ³•è¿ç®—ç¬¦ åŸºæœ¬è¡¨è¾¾å¼ | é™¤æ³•è¿ç®—ç¬¦ åŸºæœ¬è¡¨è¾¾å¼)*
 void parse_multiplicative_expr() {
     parse_primary_expr();
     while (current_token && (strstr(current_token, "(P 9)") || strstr(current_token, "(P 2)"))) {
-        // ³Ë·¨ÔËËã·û"*"»ò³ı·¨ÔËËã·û"/"
+        // ä¹˜æ³•è¿ç®—ç¬¦"*"æˆ–é™¤æ³•è¿ç®—ç¬¦"/"
         consume();
         parse_primary_expr();
     }
 }
 
-// ½âÎö»ù±¾±í´ïÊ½£ºprimary_expr ¡ú ±êÊ¶·û | Êı×Ö | ×óÀ¨ºÅ ±í´ïÊ½ ÓÒÀ¨ºÅ
+// è§£æåŸºæœ¬è¡¨è¾¾å¼ï¼šprimary_expr â†’ æ ‡è¯†ç¬¦ | æ•°å­— | å·¦æ‹¬å· è¡¨è¾¾å¼ å³æ‹¬å·
 void parse_primary_expr() {
     if (current_token && strstr(current_token, "(I ")) {
-        consume(); // ÏûºÄ±êÊ¶·û
+        consume(); // æ¶ˆè€—æ ‡è¯†ç¬¦
     }
     else if (current_token && (strstr(current_token, "(C1 ") || strstr(current_token, "(C2 "))) {
-        consume(); // ÏûºÄ³£Á¿
+        consume(); // æ¶ˆè€—å¸¸é‡
     }
     else if (current_token && strstr(current_token, "(P 3)")) { // "("
         consume();
@@ -689,7 +690,7 @@ void parse_primary_expr() {
         match("(P 4)"); // ")"
     }
     else {
-        syntax_error("ÎŞĞ§µÄ±í´ïÊ½¿ªÊ¼");
+        syntax_error("æ— æ•ˆçš„è¡¨è¾¾å¼å¼€å§‹");
     }
 }
 
@@ -701,7 +702,7 @@ void parse_primary_expr() {
 int main() {
     char source[1000];
     fgets(source, sizeof(source), stdin);
-    source[strcspn(source, "\n")] = '\0'; // È¥³ı»»ĞĞ·û
+    source[strcspn(source, "\n")] = '\0'; // ÃˆÂ¥Â³Ã½Â»Â»ÃÃÂ·Ã»
     scan(source);
     if (iscorret == 1) {
         print_token_sequence();
@@ -709,23 +710,23 @@ int main() {
         printf("\n");
     }
     else {
-        printf("´Ê·¨·ÖÎöERROR");
+        printf("è¯æ³•åˆ†æERROR");
         return 1;
     }
 
-    // ³õÊ¼»¯Óï·¨·ÖÎö
+    // åˆå§‹åŒ–è¯­æ³•åˆ†æ
     token_index = 0;
     current_token = lookahead(1);
 
-    // Óï·¨·ÖÎö
+    // è¯­æ³•åˆ†æ
     parse_program();
     if (!iscorret) {
-        printf("\nÓï·¨·ÖÎöÊ§°Ü\n");
+        printf("\nè¯­æ³•åˆ†æå¤±è´¥\n");
         return 1;
     }
 
-    // Êä³ö½á¹û
-    printf("Óï·¨·ÖÎö³É¹¦\n");
+    // è¾“å‡ºç»“æœ
+    printf("è¯­æ³•åˆ†ææˆåŠŸ\n");
     print_tables();
     return 0;
 }
