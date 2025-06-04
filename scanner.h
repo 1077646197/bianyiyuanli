@@ -6,8 +6,9 @@
 
 
 #define _CRT_SECURE_NO_WARNINGS
-
-
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
  // 关键字表，第一列是关键字，第二列是编号
 char* keywords[][2] = {
     {"int", "1"},
@@ -30,9 +31,22 @@ int keyword_count = sizeof(keywords) / sizeof(keywords[0]);
 
 // 界符表，第一列是界符，第二列是编号
 char* delimiters[][2] = {
-    {"-", "1"}, {"/", "2"}, {"(", "3"}, {")", "4"}, {"==", "5"}, {"<=", "6"},
-    {"<", "7"}, {"+", "8"}, {"*", "9"}, {">", "10"}, {"=", "11"}, {",", "12"},
-    {";", "13"}, {"++", "14"}, {"{", "15"}, {"}", "16"}
+    {"-", "1"},
+    {"/", "2"},
+    {"(", "3"},
+    {")", "4"},
+    {"==", "5"},
+    {"<=", "6"},
+    {"<", "7"},
+    {"+", "8"}, 
+    {"*", "9"}, 
+    {">", "10"}, 
+    {"=", "11"},
+    {",", "12"},
+    {";", "13"},
+    {"++", "14"},
+    {"{", "15"},
+    {"}", "16"}
 };
 int delimiter_count = sizeof(delimiters) / sizeof(delimiters[0]);
 
@@ -83,7 +97,8 @@ void add_to_C2(const char* str) {
 // 向字符常量表添加元素
 void add_to_CT(const char* str) {
     for (int i = 0; i < CT_count; i++) {
-        if (strcmp(CT[i], str) == 0) return;
+        if (strcmp(CT[i], str) == 0) 
+            return;
     }
     strcpy(CT[CT_count++], str);
 }
@@ -91,7 +106,8 @@ void add_to_CT(const char* str) {
 // 向字符串常量表添加元素
 void add_to_ST(const char* str) {
     for (int i = 0; i < ST_count; i++) {
-        if (strcmp(ST[i], str) == 0) return;
+        if (strcmp(ST[i], str) == 0)
+            return;
     }
     strcpy(ST[ST_count++], str);
 }
@@ -99,7 +115,8 @@ void add_to_ST(const char* str) {
 // 检查是否是关键字，是则返回编号，否则返回0
 int is_keyword(const char* str) {
     for (int i = 0; i < keyword_count; i++) {
-        if (strcmp(keywords[i][0], str) == 0) return atoi(keywords[i][1]);
+        if (strcmp(keywords[i][0], str) == 0) 
+            return atoi(keywords[i][1]);
     }
     return 0;
 }
@@ -107,7 +124,8 @@ int is_keyword(const char* str) {
 // 检查是否是界符，是则返回编号，否则返回0
 int is_delimiter(const char* str) {
     for (int i = 0; i < delimiter_count; i++) {
-        if (strcmp(delimiters[i][0], str) == 0) return atoi(delimiters[i][1]);
+        if (strcmp(delimiters[i][0], str) == 0) 
+            return atoi(delimiters[i][1]);
     }
     return 0;
 }
@@ -389,3 +407,5 @@ void print_tables() {
         printf("%s", ST[i]);
     }
 }
+
+
