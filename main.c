@@ -76,12 +76,6 @@ int main()
     // 执行语义分析
     analyze_program();
     // 输出符号表结果
-    printf("\n符号表内容:\n");
-    printf("名称\t类型\t初始化\t作用域\n");
-    for (int i = 0; i < symbol_count; i++) {
-        printf("%s\t", symbol_table[i].name);
-        typetrans(symbol_table[i].type);
-        printf("\t%d\t%d\n", symbol_table[i].initialized,symbol_table[i].scope);
-    }
+    printsem();
     return 0;
 }

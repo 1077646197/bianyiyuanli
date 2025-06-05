@@ -28,22 +28,22 @@ typedef struct {
     int scope;          // 作用域层级（0-全局，1-第一层块，依此类推）
 } Symbol;
 
-char typetrans(int type)
+void typetrans(int type)
 {
     switch (type)
     {
         case 1:
-            printf("i");break;
+            printf("i\t");break;
         case 2:
-            printf("r");break;
+            printf("r\t");break;
         case 3:
-            printf("c");break;
+            printf("c\t");break;
         case 4:
-            printf("b");break;
+            printf("b\t");break;
         case 5:
-            printf("a");break;
+            printf("a\t");break;
         case 6:
-            printf("d");break;
+            printf("d\t");break;
     default:
         break;
     }
@@ -354,4 +354,14 @@ void analyze_block() {
     current_scope--;
 
     match("(P 16)");  // 消耗右花括号"}"
+}
+void printsem()
+{
+    printf("\n符号表内容:\n");
+    printf("名称\t类型\t初始化\t作用域\n");
+    for (int i = 0; i < symbol_count; i++) {
+        printf("%s\t", symbol_table[i].name);
+        typetrans(symbol_table[i].type);
+        printf("%d\t%d\n", symbol_table[i].initialized, symbol_table[i].scope);
+    }
 }
