@@ -383,27 +383,27 @@ void print_token_sequence() {
 void print_tables() {
     printf("\n标识符表 :");
     for (int i = 0; i < id_count; i++) {
-        if (i > 0) printf(" ");
+        if (i > 0) printf(" |");
         printf("%s", identifiers[i]);
     }
     printf("\n整数表 :");
     for (int i = 0; i < C1_count; i++) {
-        if (i > 0) printf(" ");
+        if (i > 0) printf(" |");
         printf("%s", C1[i]);
     }
     printf("\n非整数表 :");
     for (int i = 0; i < C2_count; i++) {
-        if (i > 0) printf(" ");
+        if (i > 0) printf(" |");
         printf("%s", C2[i]);
     }
     printf("\n字符常量表 :");
     for (int i = 0; i < CT_count; i++) {
-        if (i > 0) printf(" ");
+        if (i > 0) printf(" |");
         printf("%s", CT[i]);
     }
     printf("\n字符串常量表 :");
     for (int i = 0; i < ST_count; i++) {
-        if (i > 0) printf(" ");
+        if (i > 0) printf(" |");
         printf("%s", ST[i]);
     }
 }
