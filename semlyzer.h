@@ -28,6 +28,27 @@ typedef struct {
     int scope;          // 作用域层级（0-全局，1-第一层块，依此类推）
 } Symbol;
 
+char typetrans(int type)
+{
+    switch (type)
+    {
+        case 1:
+            printf("i");break;
+        case 2:
+            printf("r");break;
+        case 3:
+            printf("c");break;
+        case 4:
+            printf("b");break;
+        case 5:
+            printf("a");break;
+        case 6:
+            printf("d");break;
+    default:
+        break;
+    }
+}
+
 Symbol symbol_table[100];  // 符号表，最多存储100个符号
 int symbol_count = 0;      // 当前符号表中的符号数量
 int current_scope = 0;     // 当前作用域层级，0表示全局作用域
@@ -161,7 +182,7 @@ int check_expression_type() {
 // 分析声明列表 - 处理连续的声明和语句
 void analyze_declaration_list() {
     while (current_token && token_index < Token_count) {
-        if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)")) {
+        if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)")) {
             // 变量声明（int或float）
             analyze_var_decl();
         }
@@ -190,7 +211,7 @@ void analyze_var_decl() {
         type = 1;
         consume();  // 消耗类型关键字
     }
-    else if (strstr(current_token, "(K 2)")) {  // float类型
+    else if (strstr(current_token, "(K 4)")) {  // float类型
         type = 2;
         consume();
     }

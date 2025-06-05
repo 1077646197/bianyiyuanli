@@ -79,11 +79,9 @@ int main()
     printf("\n符号表内容:\n");
     printf("名称\t类型\t初始化\t作用域\n");
     for (int i = 0; i < symbol_count; i++) {
-        printf("%s\t%d\t%d\t%d\n",
-            symbol_table[i].name,
-            symbol_table[i].type,
-            symbol_table[i].initialized,
-            symbol_table[i].scope);
+        printf("%s\t", symbol_table[i].name);
+        typetrans(symbol_table[i].type);
+        printf("\t%d\t%d\n", symbol_table[i].initialized,symbol_table[i].scope);
     }
     return 0;
 }
