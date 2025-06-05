@@ -153,16 +153,52 @@ void parse_declaration_list() {
 }
 
 // 解析声明：declaration → 变量声明 | 赋值语句 | if语句 | while语句
+//void parse_declaration() {
+//    if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)")) {
+//        // 变量声明
+//        parse_var_decl();
+//    }
+//    else if (strncmp(current_token, "(I ", 3) == 0 && current_token[3] != ')') {
+//        // 精确匹配标识符 (I name)
+//        char* next_token = lookahead(1);
+//        if (next_token && strstr(next_token, "(P 11)")) { // 赋值运算符"="
+//            parse_assign_stmt();
+//        }
+//        else {
+//            syntax_error("标识符后缺少赋值运算符");
+//        }
+//    }
+//    else if (strstr(current_token, "(K 12)")) { // if
+//        parse_if_stmt();
+//    }
+//    else if (strstr(current_token, "(K 5)")) { // while
+//        parse_while_stmt();
+//    }
+//    else {
+//        syntax_error("缺少声明或类型不支持");
+//    }
+//}
 void parse_declaration() {
     if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)")) {
         // 变量声明
         parse_var_decl();
     }
     else if (strncmp(current_token, "(I ", 3) == 0 && current_token[3] != ')') {
-        // 精确匹配标识符 (I name)
+        // 标识符可能是赋值语句或if/while的条件
         char* next_token = lookahead(1);
         if (next_token && strstr(next_token, "(P 11)")) { // 赋值运算符"="
             parse_assign_stmt();
+        }
+        else if (next_token && strstr(next_token, "(P 3)")) { // "("
+            // 检查是否为if/while的条件
+            char* next_next_token = lookahead(2);
+            if (next_next_token &&
+                (strstr(next_next_token, "(K 12)") || strstr(next_next_token, "(K 5)"))) {
+                syntax_error("if/while关键字位置错误");
+            }
+            else {
+                syntax_error("标识符后缺少赋值运算符");
+            }
         }
         else {
             syntax_error("标识符后缺少赋值运算符");
@@ -178,7 +214,6 @@ void parse_declaration() {
         syntax_error("缺少声明或类型不支持");
     }
 }
-
 // 解析变量声明：var_decl → 类型说明符 标识符 分号
 void parse_var_decl() {
     parse_type_specifier();
