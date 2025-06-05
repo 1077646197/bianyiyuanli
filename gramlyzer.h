@@ -158,29 +158,24 @@ void parse_declaration() {
         // 变量声明
         parse_var_decl();
     }
-    else if (strstr(current_token, "(I ")) {
-        // 检查下一个Token以区分赋值语句/if/while
-        char* next_token = lookahead(2);
+    else if (strncmp(current_token, "(I ", 3) == 0 && current_token[3] != ')') {
+        // 精确匹配标识符 (I name)
+        char* next_token = lookahead(1);
         if (next_token && strstr(next_token, "(P 11)")) { // 赋值运算符"="
             parse_assign_stmt();
         }
-        else if (lookahead(2) && strstr(lookahead(2), "(P 3)")) { // "("
-            if (strstr(lookahead(1), "(K 12)")) { // if
-                parse_if_stmt();
-            }
-            else if (strstr(lookahead(1), "(K 5)")) { // while
-                parse_while_stmt();
-            }
-            else {
-                syntax_error("非法的语句开头");
-            }
-        }
         else {
-            syntax_error("无法识别的声明类型");
+            syntax_error("标识符后缺少赋值运算符");
         }
     }
+    else if (strstr(current_token, "(K 12)")) { // if
+        parse_if_stmt();
+    }
+    else if (strstr(current_token, "(K 5)")) { // while
+        parse_while_stmt();
+    }
     else {
-        syntax_error("缺少声明");
+        syntax_error("缺少声明或类型不支持");
     }
 }
 

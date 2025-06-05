@@ -114,6 +114,6 @@ int main()
         return 1;
     }
     // 输出结果
-    printf("语法分析成功\n");
+    printf("\n语法分析成功\n");
     return 0;
 }
