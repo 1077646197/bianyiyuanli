@@ -6,7 +6,7 @@
 声明 → 变量声明 | 赋值语句 | if语句 | while语句
 
 // 变量声明
-变量声明 → 类型说明符 标识符 ;
+变量声明 → 类型说明符 标识符 (赋值运算符 表达式)? ;
 类型说明符 → int | void
 
 // 赋值语句
@@ -62,7 +62,7 @@ void syntax_error(const char* message);// 错误处理
 void parse_program();           // 程序 → 声明列表
 void parse_declaration_list();  // 声明列表 → 声明 声明列表 | ε
 void parse_declaration();       // 声明 → 变量声明 | 赋值语句 | if语句 | while语句
-void parse_var_decl();          // 变量声明 → 类型说明符 标识符 ;
+void parse_var_decl();          // 变量声明 → 类型说明符 标识符 (赋值运算符 表达式)? ;
 void parse_type_specifier();    // 类型说明符 → int | void
 void parse_assign_stmt();       // 赋值语句 → 标识符 = 表达式 ;
 void parse_if_stmt();           // if语句 → if语句 → if ( 条件 ) 代码块 (else 代码块)？
@@ -241,11 +241,17 @@ void parse_declaration() {
     syntax_error("缺少声明或类型不支持");
     if (current_token) consume();  // 跳过错误Token
 }
-// 解析变量声明：var_decl → 类型说明符 标识符 分号
+
+// 解析变量声明：var_decl → 类型说明符 标识符 (赋值运算符 表达式)? ;
 void parse_var_decl() {
     parse_type_specifier();
     if (current_token && strstr(current_token, "(I ")) {
         consume(); // 消耗标识符
+        // 可选的赋值部分
+        if (current_token && strstr(current_token, "(P 11)")) { // "="
+            consume();
+            parse_expr();
+        }
         if (current_token && strstr(current_token, "(P 13)")) { // 分号";"
             consume(); // 消耗分号
         }
@@ -312,7 +318,9 @@ void parse_relop() {
     if (current_token && (strstr(current_token, "(P 10)") ||  // ">"
         strstr(current_token, "(P 7)") ||   // "<"
         strstr(current_token, "(P 5)") ||   // "=="
-        strstr(current_token, "(P 6)"))) {  // "<="
+        strstr(current_token, "(P 6)") ||   // "<="
+        strstr(current_token, "(P 17") ||   // "!="
+        strstr(current_token, "(P 18"))) {  // ">="
         consume();
     }
     else {

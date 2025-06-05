@@ -26,7 +26,8 @@ char* keywords[][2] = {
     {"default", "13"},
     {"else", "14"},
     {"main", "15"},
-    {"char","16"}
+    {"char","16"},
+    {"bool","16"}
 };
 int keyword_count = sizeof(keywords) / sizeof(keywords[0]);
 
@@ -47,7 +48,9 @@ char* delimiters[][2] = {
     {";", "13"},
     {"++", "14"},
     {"{", "15"},
-    {"}", "16"}
+    {"}", "16"},
+    {"!=","17"},
+    {">=","18"}
 };
 int delimiter_count = sizeof(delimiters) / sizeof(delimiters[0]);
 
@@ -68,6 +71,9 @@ int ST_count = 0;
 
 char Token[100][20]; // Token串表
 int Token_count = 0;
+
+char bool[10][20]; // Token串表
+int bool_count = 0;
 
 int iscorret = 1;//是否正确
 
@@ -409,5 +415,3 @@ void print_tables() {
     }
     printf("\n");
 }
-
-
