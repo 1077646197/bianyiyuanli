@@ -59,7 +59,6 @@ while语句 → 当 左括号 条件 右括号 代码块
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -69,6 +68,8 @@ char* current_token;           // 当前Token
 
 // 向前查看n个Token
 char* lookahead(int n);
+// 同步函数：跳过Token直到遇到指定类型或语句结束
+void sync_to_statement_end();
 // 消耗当前Token并移动到下一个
 void consume();
 // 匹配特定类型的Token并消耗
@@ -92,11 +93,28 @@ void parse_additive_expr();     // 加法表达式 → 乘法表达式 (加法运算符 乘法表达
 void parse_multiplicative_expr(); // 乘法表达式 → 基本表达式 (乘法运算符 基本表达式 | 除法运算符 基本表达式)*
 void parse_primary_expr();      // 基本表达式 → 标识符 | 数字 | 左括号 表达式 右括号
 
+// 精确匹配Token类型（如"(K 5)"）
+int is_token_type(const char* token, const char* type) {
+    return strcmp(token, type) == 0;
+}
+
+// 向前查看n个Token
 char* lookahead(int n) {
     if (token_index + n - 1 < Token_count) {
         return Token[token_index + n - 1];
     }
     return NULL; // 到达Token流末尾
+}
+
+// 同步函数：跳过Token直到遇到指定类型或语句结束
+void sync_to_statement_end() {
+    while (current_token &&
+        !strstr(current_token, "(P 13)") &&  // 分号
+        !strstr(current_token, "(P 16)") &&  // 右花括号
+        !strstr(current_token, "(K 5)") &&   // while
+        !strstr(current_token, "(K 12)")) {  // if
+        consume();
+    }
 }
 
 // 消耗当前Token并移动到下一个
@@ -110,18 +128,18 @@ void consume() {
     }
 }
 
-// 匹配特定类型的Token并消耗
+// 增强版match函数：提供更精确的匹配和错误恢复
 void match(const char* token_type) {
-    if (current_token && strstr(current_token, token_type)) {
+    if (current_token && is_token_type(current_token, token_type)) {
         consume();
     }
     else {
         char error_msg[100];
         sprintf(error_msg, "期望 %s，却发现 %s", token_type, current_token ? current_token : "EOF");
         syntax_error(error_msg);
+        sync_to_statement_end(); // 跳过到下一个语句
     }
 }
-
 
 // 语法错误处理
 void syntax_error(const char* message) {
@@ -152,66 +170,57 @@ void parse_declaration_list() {
     // 空产生式情况：不做处理
 }
 
+
 // 解析声明：declaration → 变量声明 | 赋值语句 | if语句 | while语句
-//void parse_declaration() {
-//    if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)")) {
-//        // 变量声明
-//        parse_var_decl();
-//    }
-//    else if (strncmp(current_token, "(I ", 3) == 0 && current_token[3] != ')') {
-//        // 精确匹配标识符 (I name)
-//        char* next_token = lookahead(1);
-//        if (next_token && strstr(next_token, "(P 11)")) { // 赋值运算符"="
-//            parse_assign_stmt();
-//        }
-//        else {
-//            syntax_error("标识符后缺少赋值运算符");
-//        }
-//    }
-//    else if (strstr(current_token, "(K 12)")) { // if
-//        parse_if_stmt();
-//    }
-//    else if (strstr(current_token, "(K 5)")) { // while
-//        parse_while_stmt();
-//    }
-//    else {
-//        syntax_error("缺少声明或类型不支持");
-//    }
-//}
+// 解析声明：优化错误处理和恢复
 void parse_declaration() {
     if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)")) {
         // 变量声明
         parse_var_decl();
     }
     else if (strncmp(current_token, "(I ", 3) == 0 && current_token[3] != ')') {
-        // 标识符可能是赋值语句或if/while的条件
+        // 标识符可能是赋值语句或表达式的一部分
         char* next_token = lookahead(1);
         if (next_token && strstr(next_token, "(P 11)")) { // 赋值运算符"="
             parse_assign_stmt();
         }
         else if (next_token && strstr(next_token, "(P 3)")) { // "("
-            // 检查是否为if/while的条件
-            char* next_next_token = lookahead(2);
-            if (next_next_token &&
-                (strstr(next_next_token, "(K 12)") || strstr(next_next_token, "(K 5)"))) {
-                syntax_error("if/while关键字位置错误");
+            // 尝试解析为while/if条件
+            char* prev_token = current_token;
+            int prev_index = token_index;
+
+            consume(); // 消耗左括号
+            parse_expr();
+
+            if (current_token && strstr(current_token, "(P 4)")) { // 右括号
+                consume();
+                // 检查是否为代码块
+                if (current_token && strstr(current_token, "(P 15)")) {
+                    parse_block();
+                    return; // 成功解析while/if语句
+                }
             }
-            else {
-                syntax_error("标识符后缺少赋值运算符");
-            }
+
+            // 恢复状态并报错
+            token_index = prev_index;
+            current_token = prev_token;
+            syntax_error("无效的表达式或语句结构");
+            consume(); // 关键修复：跳过当前错误Token
         }
         else {
             syntax_error("标识符后缺少赋值运算符");
+            consume(); // 关键修复：跳过当前错误Token
         }
-    }
-    else if (strstr(current_token, "(K 12)")) { // if
-        parse_if_stmt();
     }
     else if (strstr(current_token, "(K 5)")) { // while
         parse_while_stmt();
     }
+    else if (strstr(current_token, "(K 12)")) { // if
+        parse_if_stmt();
+    }
     else {
         syntax_error("缺少声明或类型不支持");
+        if (current_token) consume(); // 跳过当前错误Token
     }
 }
 // 解析变量声明：var_decl → 类型说明符 标识符 分号
@@ -245,7 +254,7 @@ void parse_type_specifier() {
 void parse_assign_stmt() {
     match("(I "); // 标识符
     match("(P 11)"); // 赋值运算符"="
-    parse_expr();
+    parse_expr();//
     match("(P 13)"); // 分号";"
 }
 
@@ -285,7 +294,6 @@ void parse_relop() {
     if (current_token && (strstr(current_token, "(P 10)") ||  // ">"
         strstr(current_token, "(P 7)") ||   // "<"
         strstr(current_token, "(P 5)") ||   // "=="
-        strstr(current_token, "(P 11)") ||  // "=" (赋值，需区分)
         strstr(current_token, "(P 6)"))) {  // "<="
         consume();
     }
