@@ -12,7 +12,7 @@ extern char C1[100][50];             // 存储整型常量的二维数组，每行代表一个整型
 extern int C1_count;                 // 整型常量计数器
 extern char C2[100][50];             // 存储浮点型常量的二维数组
 extern int C2_count;                 // 浮点型常量计数器
-extern char Token[100][6];          // 存储所有词法单元的二维数组，每个词法单元格式如"(K 1)"
+extern char Token[100][20];          // 存储所有词法单元的二维数组，每个词法单元格式如"(K 1)"
 extern int Token_count;              // 词法单元总数
 extern int token_index;              // 当前处理的词法单元索引
 extern char* current_token;          // 当前词法单元指针

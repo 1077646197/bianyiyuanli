@@ -65,7 +65,7 @@ int CT_count = 0;
 char ST[100][50]; // 字符串常量表
 int ST_count = 0;
 
-char Token[100][6]; // Token串表
+char Token[100][20]; // Token串表
 int Token_count = 0;
 
 int iscorret = 1;//是否正确
