@@ -165,7 +165,7 @@ void parse_declaration() {
             parse_assign_stmt();
         }
         else {
-            syntax_error("标识符后缺少赋值运算符");
+           // syntax_error("标识符后缺少赋值运算符");
         }
     }
     else if (strstr(current_token, "(K 12)")) { // if
