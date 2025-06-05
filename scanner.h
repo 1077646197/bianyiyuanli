@@ -38,9 +38,9 @@ char* delimiters[][2] = {
     {"==", "5"},
     {"<=", "6"},
     {"<", "7"},
-    {"+", "8"}, 
-    {"*", "9"}, 
-    {">", "10"}, 
+    {"+", "8"},
+    {"*", "9"},
+    {">", "10"},
     {"=", "11"},
     {",", "12"},
     {";", "13"},
@@ -65,7 +65,7 @@ int CT_count = 0;
 char ST[100][50]; // 字符串常量表
 int ST_count = 0;
 
-char Token[100][50]; // Token串表
+char Token[100][6]; // Token串表
 int Token_count = 0;
 
 int iscorret = 1;//是否正确
@@ -97,7 +97,7 @@ void add_to_C2(const char* str) {
 // 向字符常量表添加元素
 void add_to_CT(const char* str) {
     for (int i = 0; i < CT_count; i++) {
-        if (strcmp(CT[i], str) == 0) 
+        if (strcmp(CT[i], str) == 0)
             return;
     }
     strcpy(CT[CT_count++], str);
@@ -115,7 +115,7 @@ void add_to_ST(const char* str) {
 // 检查是否是关键字，是则返回编号，否则返回0
 int is_keyword(const char* str) {
     for (int i = 0; i < keyword_count; i++) {
-        if (strcmp(keywords[i][0], str) == 0) 
+        if (strcmp(keywords[i][0], str) == 0)
             return atoi(keywords[i][1]);
     }
     return 0;
@@ -124,7 +124,7 @@ int is_keyword(const char* str) {
 // 检查是否是界符，是则返回编号，否则返回0
 int is_delimiter(const char* str) {
     for (int i = 0; i < delimiter_count; i++) {
-        if (strcmp(delimiters[i][0], str) == 0) 
+        if (strcmp(delimiters[i][0], str) == 0)
             return atoi(delimiters[i][1]);
     }
     return 0;

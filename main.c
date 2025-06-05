@@ -40,6 +40,7 @@
 #include "scanner.h"
 #include "gramlyzer.h"
 #include "fopen.h"
+#include "semlyzer.h"
 
 
 int main() 
@@ -53,10 +54,11 @@ int main()
         print_tables();
     }
     else {
-        printf("编译失败，程序存在错误！！！！");
+        printf("编译失败，程序存在错误！！！！\n");
     }
+    printf("\n");
 //===========================================
-// 
+ /*
     // 初始化语法分析
     token_index = 0;
     current_token = lookahead(1);
@@ -68,6 +70,20 @@ int main()
         return 1;
     }
     // 输出结果
-    printf("\n语法分析成功\n");
+    printf("\n语法分析成功\n"); */
+//==================================================
+// 
+    // 执行语义分析
+    analyze_program();
+    // 输出符号表结果
+    printf("\n符号表内容:\n");
+    printf("名称\t类型\t初始化\t作用域\n");
+    for (int i = 0; i < symbol_count; i++) {
+        printf("%s\t%d\t%d\t%d\n",
+            symbol_table[i].name,
+            symbol_table[i].type,
+            symbol_table[i].initialized,
+            symbol_table[i].scope);
+    }
     return 0;
 }
