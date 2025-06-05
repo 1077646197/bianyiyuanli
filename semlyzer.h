@@ -20,6 +20,24 @@ extern char* lookahead(int n);       // 向前查看n个词法单元，用于预读
 extern void consume();               // 消耗当前词法单元，指向下一个
 extern void match(const char* token_type);  // 匹配并消耗指定类型的词法单元，不匹配则报错
 
+// 函数声明
+void semantic_error(const char* message);        // 语义错误处理，输出错误信息并终止程序
+int find_symbol(const char* name, int scope);    // 在符号表中查找符号，返回索引或-1
+void add_symbol(const char* name, int type);     // 向符号表添加符号，检查重复定义
+void check_variable(const char* name);           // 检查变量是否存在且已初始化（用于读取操作）
+void set_initialized(const char* name);          // 设置变量为已初始化状态
+int get_type(const char* name);                  // 获取变量类型，不存在则报错
+void analyze_program();                          // 分析整个程序，语义分析入口点
+void analyze_declaration_list();                 // 分析声明列表（变量声明、语句等）
+void analyze_var_decl();                         // 分析变量声明语句
+void analyze_statement();                        // 分析各类语句（赋值、if、while等）
+void analyze_assignment();                       // 分析赋值语句
+void analyze_if_stmt();                          // 分析if语句
+void analyze_while_stmt();                       // 分析while语句
+void analyze_block();                            // 分析代码块（由{}包围的语句组）
+int check_expression_type();                     // 检查表达式类型，返回类型码
+
+
 // 符号表结构 - 存储程序中定义的变量信息
 typedef struct {
     char name[50];      // 变量名
@@ -53,22 +71,7 @@ Symbol symbol_table[100];  // 符号表，最多存储100个符号
 int symbol_count = 0;      // 当前符号表中的符号数量
 int current_scope = 0;     // 当前作用域层级，0表示全局作用域
 
-// 函数声明
-void semantic_error(const char* message);        // 语义错误处理，输出错误信息并终止程序
-int find_symbol(const char* name, int scope);    // 在符号表中查找符号，返回索引或-1
-void add_symbol(const char* name, int type);     // 向符号表添加符号，检查重复定义
-void check_variable(const char* name);           // 检查变量是否存在且已初始化（用于读取操作）
-void set_initialized(const char* name);          // 设置变量为已初始化状态
-int get_type(const char* name);                  // 获取变量类型，不存在则报错
-void analyze_program();                          // 分析整个程序，语义分析入口点
-void analyze_declaration_list();                 // 分析声明列表（变量声明、语句等）
-void analyze_var_decl();                         // 分析变量声明语句
-void analyze_statement();                        // 分析各类语句（赋值、if、while等）
-void analyze_assignment();                       // 分析赋值语句
-void analyze_if_stmt();                          // 分析if语句
-void analyze_while_stmt();                       // 分析while语句
-void analyze_block();                            // 分析代码块（由{}包围的语句组）
-int check_expression_type();                     // 检查表达式类型，返回类型码
+
 
 
 // 语义分析入口 - 初始化并开始分析整个程序
@@ -182,10 +185,12 @@ int check_expression_type() {
 // 分析声明列表 - 处理连续的声明和语句
 void analyze_declaration_list() {
     while (current_token && token_index < Token_count) {
-        if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)")) {
+        if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)")||
+            strstr(current_token, "(K 16)")) {
             // 变量声明（int或float）
             analyze_var_decl();
         }
+
         else if (strstr(current_token, "(I ")) {
             // 赋值语句或函数调用（以标识符开头）
             analyze_statement();
@@ -213,6 +218,10 @@ void analyze_var_decl() {
     }
     else if (strstr(current_token, "(K 4)")) {  // float类型
         type = 2;
+        consume();
+    }
+    else if (strstr(current_token, "(K 16)")) {  // float类型
+        type = 3;
         consume();
     }
     else {

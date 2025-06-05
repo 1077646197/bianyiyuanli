@@ -25,7 +25,8 @@ char* keywords[][2] = {
     {"if", "12"},
     {"default", "13"},
     {"else", "14"},
-    {"main", "15"}
+    {"main", "15"},
+    {"char","16"}
 };
 int keyword_count = sizeof(keywords) / sizeof(keywords[0]);
 
