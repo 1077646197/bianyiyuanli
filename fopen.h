@@ -10,7 +10,7 @@ void read_file(const char* filename) {
         perror("Error opening file"); // 输出错误信息
         return; // 退出程序
     }
-    else  printf("打开文件 ");
+    else  printf("文件打开成功!!!\n");
 
     // 安全读取文件内容到source数组
     if (fgets(source, sizeof(source), file)) { // 读取一行（可能不完整）

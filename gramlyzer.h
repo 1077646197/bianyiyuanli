@@ -1,59 +1,39 @@
 #pragma once
-/*·程序定义
+/*·
+//程序定义
 程序 → 声明列表
 声明列表 → 声明 声明列表 | ε
 声明 → 变量声明 | 赋值语句 | if语句 | while语句
 
 // 变量声明
-变量声明 → 类型说明符 标识符 分号
-类型说明符 → 整型 | 空类型
+变量声明 → 类型说明符 标识符 ;
+类型说明符 → int | void
 
 // 赋值语句
-赋值语句 → 标识符 赋值运算符 表达式 分号
+赋值语句 → 标识符 = 表达式 ;
 
 // 表达式（保持不变）
 表达式 → 加法表达式
-加法表达式 → 乘法表达式 (加法运算符 乘法表达式 | 减法运算符 乘法表达式)*
-乘法表达式 → 基本表达式 (乘法运算符 基本表达式 | 除法运算符 基本表达式)*
-基本表达式 → 标识符 | 数字 | 左括号 表达式 右括号
+加法表达式 → 乘法表达式     (+ 乘法表达式 | - 乘法表达式)的*闭包
+乘法表达式 → 基本表达式     (* 基本表达式 | / 基本表达式)的*闭包
+基本表达式 → 标识符 | 数字 | ( 表达式 )
 
 // if 语句
-if语句 → 如果 左括号 条件 右括号 代码块 (否则 代码块)?
+if语句 → if ( 条件 ) 代码块 (else 代码块)？
 条件 → 表达式 关系运算符 表达式
-关系运算符 → 大于 | 小于 | 等于 | 不等于 | 大于等于 | 小于等于
+关系运算符 → > | < | == | != | >= | <=
 
 // while 循环
-while语句 → 当 左括号 条件 右括号 代码块
+while语句 → while ( 条件 ) 代码块
 
 // 代码块
-代码块 → 左花括号 声明列表 右花括号
+代码块 → { 声明列表 }
 
 // 终结符（词法单元）
-整型 : "int"
-空类型 : "void"
-标识符 : [a-zA-Z_][a-zA-Z0-9_]*
-数字 : [0-9]+
-分号 : ";"
-赋值运算符 : "="
-加法运算符 : "+"
-减法运算符 : "-"
-乘法运算符 : "*"
-除法运算符 : "/"
-左括号 : "("
-右括号 : ")"
-如果 : "if"
-否则 : "else"
-当 : "while"
-左花括号 : "{"
-右花括号 : "}"
-大于 : ">"
-小于 : "<"
-等于 : "=="
-不等于 : "!="
-大于等于 : ">="
-小于等于 : "<="
- */
+标识符 : [a-z或A-Z或_]  [a-z或A-Z或0-9或_]的*闭包
+数字 : [0-9]的+闭包
 
+ */
 
 
 
@@ -62,36 +42,38 @@ while语句 → 当 左括号 条件 右括号 代码块
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+ 
+
  // 全局变量
 int token_index = 0;           // 当前Token索引
 char* current_token;           // 当前Token
 
-// 向前查看n个Token
-char* lookahead(int n);
-// 同步函数：跳过Token直到遇到指定类型或语句结束
-void sync_to_statement_end();
-// 消耗当前Token并移动到下一个
-void consume();
-// 匹配特定类型的Token并消耗
-void match(const char* token_type);
-// 错误处理
-void syntax_error(const char* message);
-// 解析函数（对应文法非终结符）
+
+//函数声明
+int is_token_type(const char* token, const char* type);// 精确匹配Token类型
+char* lookahead(int n);// 向前查看n个Token
+void sync_to_statement_end();// 同步函数：跳过Token直到遇到指定类型或语句结束
+void consume();// 消耗当前Token并移动到下一个
+void match(const char* token_type);// 匹配特定类型的Token并消耗
+void syntax_error(const char* message);// 错误处理
+
+
+// 解析函数声明（对应文法非终结符）
 void parse_program();           // 程序 → 声明列表
 void parse_declaration_list();  // 声明列表 → 声明 声明列表 | ε
 void parse_declaration();       // 声明 → 变量声明 | 赋值语句 | if语句 | while语句
-void parse_var_decl();          // 变量声明 → 类型说明符 标识符 分号
-void parse_type_specifier();    // 类型说明符 → 整型 | 空类型
-void parse_assign_stmt();       // 赋值语句 → 标识符 赋值运算符 表达式 分号
-void parse_if_stmt();           // if语句 → 如果 左括号 条件 右括号 代码块 (否则 代码块)?
-void parse_while_stmt();        // while语句 → 当 左括号 条件 右括号 代码块
+void parse_var_decl();          // 变量声明 → 类型说明符 标识符 ;
+void parse_type_specifier();    // 类型说明符 → int | void
+void parse_assign_stmt();       // 赋值语句 → 标识符 = 表达式 ;
+void parse_if_stmt();           // if语句 → if语句 → if ( 条件 ) 代码块 (else 代码块)？
+void parse_while_stmt();        // while语句 → while ( 条件 ) 代码块
 void parse_condition();         // 条件 → 表达式 关系运算符 表达式
-void parse_relop();             // 关系运算符 → 大于 | 小于 | 等于 | 不等于 | 大于等于 | 小于等于
-void parse_block();             // 代码块 → 左花括号 声明列表 右花括号
+void parse_relop();             // 关系运算符 → > | < | == | != | >= | <=
+void parse_block();             // 代码块 → { 声明列表 }
 void parse_expr();              // 表达式 → 加法表达式
-void parse_additive_expr();     // 加法表达式 → 乘法表达式 (加法运算符 乘法表达式 | 减法运算符 乘法表达式)*
-void parse_multiplicative_expr(); // 乘法表达式 → 基本表达式 (乘法运算符 基本表达式 | 除法运算符 基本表达式)*
-void parse_primary_expr();      // 基本表达式 → 标识符 | 数字 | 左括号 表达式 右括号
+void parse_additive_expr();     // 加法表达式 → 乘法表达式     (+ 乘法表达式 | - 乘法表达式)的*闭包
+void parse_multiplicative_expr(); // 乘法表达式 → 基本表达式     (* 基本表达式 | / 基本表达式)的*闭包
+void parse_primary_expr();      // 基本表达式 → 标识符 | 数字 | ( 表达式 )
 
 // 精确匹配Token类型（如"(K 5)"）
 int is_token_type(const char* token, const char* type) {
@@ -141,6 +123,19 @@ void match(const char* token_type) {
     }
 }
 
+//识别前缀版的match函数
+void match_prefix(const char* prefix) {
+    if (current_token && strncmp(current_token, prefix, strlen(prefix)) == 0) {
+        consume();
+    }
+    else {
+        char error_msg[100];
+        sprintf(error_msg, "期望以 %s 开头的Token，却发现 %s", prefix, current_token ? current_token : "EOF");
+        syntax_error(error_msg);
+        sync_to_statement_end();
+    }
+}
+
 // 语法错误处理
 void syntax_error(const char* message) {
     printf("语法错误: %s\n", message);
@@ -170,58 +165,81 @@ void parse_declaration_list() {
     // 空产生式情况：不做处理
 }
 
-
-// 解析声明：declaration → 变量声明 | 赋值语句 | if语句 | while语句
-// 解析声明：优化错误处理和恢复
 void parse_declaration() {
+    // 1. 处理变量声明（int/void 开头）
     if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)")) {
-        // 变量声明
         parse_var_decl();
+        return;
     }
-    else if (strncmp(current_token, "(I ", 3) == 0 && current_token[3] != ')') {
-        // 标识符可能是赋值语句或表达式的一部分
-        char* next_token = lookahead(1);
-        if (next_token && strstr(next_token, "(P 11)")) { // 赋值运算符"="
+
+    // 2. 处理标识符开头的语句
+    if (strncmp(current_token, "(I ", 3) == 0 && current_token[3] != ')') {
+        char* next_token = lookahead(2);
+
+        // 2.1 赋值语句（标识符 = 表达式）
+        if (next_token && strstr(next_token, "(P 11)")) {
             parse_assign_stmt();
+            return;
         }
-        else if (next_token && strstr(next_token, "(P 3)")) { // "("
-            // 尝试解析为while/if条件
+
+        // 2.2 带括号的表达式（可能是条件或函数调用）
+        if (next_token && strstr(next_token, "(P 3)")) {
+            // 保存当前状态用于错误恢复
             char* prev_token = current_token;
             int prev_index = token_index;
 
-            consume(); // 消耗左括号
+            // 消耗标识符和左括号
+            consume();  // 消耗标识符
+            consume();  // 消耗左括号
+
+            // 解析括号内的表达式
             parse_expr();
 
-            if (current_token && strstr(current_token, "(P 4)")) { // 右括号
-                consume();
-                // 检查是否为代码块
+            // 检查是否匹配右括号
+            if (current_token && strstr(current_token, "(P 4)")) {
+                consume();  // 消耗右括号
+
+                // 检查是否为代码块开头，若是则认为是if/while语句
                 if (current_token && strstr(current_token, "(P 15)")) {
                     parse_block();
-                    return; // 成功解析while/if语句
+                    return;
                 }
+
+                // 若不是代码块，可能是函数调用或表达式语句
+                syntax_error("缺少代码块，可能是未支持的函数调用");
+            }
+            else {
+                syntax_error("括号不匹配");
             }
 
-            // 恢复状态并报错
+            // 错误恢复：回退到解析前的状态
             token_index = prev_index;
             current_token = prev_token;
-            syntax_error("无效的表达式或语句结构");
-            consume(); // 关键修复：跳过当前错误Token
+            consume();  // 跳过错误的标识符，继续解析后续内容
+            return;
         }
-        else {
-            syntax_error("标识符后缺少赋值运算符");
-            consume(); // 关键修复：跳过当前错误Token
-        }
+
+        // 2.3 其他情况：标识符后既非=也非(
+        syntax_error("标识符后缺少赋值运算符或左括号");
+        consume();  // 跳过错误Token
+        return;
     }
-    else if (strstr(current_token, "(K 5)")) { // while
+
+    // 3. 处理while语句
+    if (strstr(current_token, "(K 5)")) {
         parse_while_stmt();
+        return;
     }
-    else if (strstr(current_token, "(K 12)")) { // if
+
+    // 4. 处理if语句
+    if (strstr(current_token, "(K 12)")) {
         parse_if_stmt();
+        return;
     }
-    else {
-        syntax_error("缺少声明或类型不支持");
-        if (current_token) consume(); // 跳过当前错误Token
-    }
+
+    // 5. 未识别的声明类型
+    syntax_error("缺少声明或类型不支持");
+    if (current_token) consume();  // 跳过错误Token
 }
 // 解析变量声明：var_decl → 类型说明符 标识符 分号
 void parse_var_decl() {
@@ -252,7 +270,7 @@ void parse_type_specifier() {
 
 // 解析赋值语句：assign_stmt → 标识符 赋值运算符 表达式 分号
 void parse_assign_stmt() {
-    match("(I "); // 标识符
+    match_prefix("(I "); // 标识符
     match("(P 11)"); // 赋值运算符"="
     parse_expr();//
     match("(P 13)"); // 分号";"
@@ -351,4 +369,4 @@ void parse_primary_expr() {
         syntax_error("无效的表达式开始");
     }
 }
-#pragma once
+
