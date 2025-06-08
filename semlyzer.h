@@ -37,6 +37,7 @@ void print_quadruples();                         // 打印四元式列表
 void print_activation_records();                 // 打印活动记录表
 void print_constant_table();                     // 打印常数表
 void typetrans(int type);                        // 将类型码转换为字符表示（i/r/c等）
+char* parse_condition_expression();
 
 // 外部变量声明（假设来自词法分析器）
 extern char identifiers[100][50];    // 标识符表
@@ -201,7 +202,7 @@ void generate_assign_quad(const char* src, const char* dest) {
 
 // 生成条件跳转四元式
 void generate_if_quad(const char* cond, const char* target) {
-    generate_quad("if", cond, "", target);
+    generate_quad("if", target, "", "");
 }
 
 // 生成无条件跳转四元式
@@ -290,7 +291,6 @@ void analyze_declaration_list() {
         if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")) {
             analyze_var_decl();  // 变量声明
         }
-
         else if (strstr(current_token, "(I ")) {
             analyze_statement();  // 赋值语句或函数调用
         }
@@ -300,8 +300,12 @@ void analyze_declaration_list() {
         else if (strstr(current_token, "(K 5)")) {
             analyze_while_stmt(); // while语句
         }
+        else if (strstr(current_token, "(P 16)")) {
+            break;
+        }
         else {
-            semantic_error("不支持的语句类型");
+            printf("%s", Token[token_index]);
+            semantic_error("不支持的语句类型1111111");
         }
     }
 }
@@ -372,37 +376,6 @@ void analyze_var_decl() {
         semantic_error("变量声明缺少标识符");
     }
 }
-// 分析赋值语句
-/*void analyze_assignment() {
-    int id;
-    sscanf(current_token, "(I %d)", &id);
-    check_variable(identifiers[id-1]);  // 检查变量是否存在且已初始化
-    int var_type = get_type(identifiers[id - 1]);
-    consume();  // 消耗左值标识符
-
-    match("(P 11)");  // 消耗赋值运算符"="
-
-    // 处理右值表达式
-    if (strstr(current_token, "(C1 ")) {  // 整型常量
-        int cid;
-        sscanf(current_token, "(C1 %d)", &cid);
-        char* const_val = get_constant_quad(C1[cid - 1], 1);
-        generate_assign_quad(const_val, identifiers[id - 1]);
-    }
-    else if (strstr(current_token, "(I ")) {  // 变量
-        int vid;
-        sscanf(current_token, "(I %d)", &vid);
-        generate_assign_quad(identifiers[vid - 1], identifiers[id - 1]);
-    }
-    else {
-        semantic_error("不支持的右值表达式类型");
-    }
-
-    set_initialized(identifiers[id - 1]);  // 标记为已初始化
-    consume();  // 消耗表达式
-    match("(P 13)");  // 消耗分号";"
-}*/
-
 
 
 void analyze_assignment() {
@@ -500,6 +473,8 @@ char* parse_factor() {
 
 
 
+
+
 // 分析语句
 void analyze_statement() {
     if (current_token && strstr(current_token, "(I ")) {
@@ -518,45 +493,37 @@ void analyze_if_stmt() {
     match("(K 12)");  // 消耗"if"关键字
     match("(P 3)");   // 消耗左括号"("
 
-    // 检查条件表达式类型
-    int cond_type = check_expression_type();
-    if (cond_type != 1) {  // 要求条件为int类型（简化处理）
-        semantic_error("条件表达式必须为整数类型");
-    }
+    // 解析条件表达式（支持关系运算符）
+    char* cond_result = parse_condition_expression();
 
     // 生成条件跳转四元式
-    char cond[50];
-    if (strstr(current_token, "(I ")) {
-        int id;
-        sscanf(current_token, "(I %d)", &id);
-        strcpy(cond, identifiers[id - 1]);
-    }
-    else if (strstr(current_token, "(C1 ")) {
-        int cid;
-        sscanf(current_token, "(C1 %d)", &cid);
-        sprintf(cond, "C%d", add_constant(C1[cid - 1], 1));
-    }
-    consume();  // 消耗条件表达式
-
-    match("(P 4)");  // 消耗右括号")"
-
-    // 生成条件跳转和无条件跳转（目标需后续回填）
     char target_true[10], target_false[10];
-    sprintf(target_true, "L%d", quad_count + 1);
-    generate_if_quad(cond, target_true);
+    sprintf(target_true, "T%d", quad_count);
+    generate_if_quad(cond_result, target_true);  // 条件表达式结果作为条件
     sprintf(target_false, "L%d", quad_count + 2);
-    generate_goto_quad(target_false);
+    //generate_goto_quad(target_false);
+
+    // 释放条件表达式结果的内存
+    if (strncmp(cond_result, "T", 1) == 0) {
+        free(cond_result);
+    }
+
+    if (!strstr(current_token, "(P 4)")) {
+        semantic_error("条件表达式缺少右括号')'");
+    }
+    match("(P 4)");  // 消耗右括号")"
 
     // 分析if代码块
     enter_scope();
     analyze_block();
+
     exit_scope();
 
     // 处理else部分（如果有）
     if (current_token && strstr(current_token, "(K 14)")) {
         // 生成跳转到else后代码的指令
         char target_end[10];
-        sprintf(target_end, "L%d", quad_count + 1);
+        sprintf(target_end, "T%d", quad_count + 1);
         generate_goto_quad(target_end);
 
         // 回填else分支的目标
@@ -567,10 +534,80 @@ void analyze_if_stmt() {
         analyze_block();
         exit_scope();
     }
+
     else {
         // 回填else分支的目标（如果没有else，则跳转到if块之后）
         strcpy(quad[quad_count - 1].result, target_false);
     }
+    generate_quad("ie", " ", " ", "");
+}
+
+// 解析条件表达式（支持关系运算符，修正consume调用）
+char* parse_condition_expression() {
+    // 解析左操作数（如"a"或"a + b"）
+    char* left_operand = parse_expression_for_assignment();
+
+    // 检查是否存在关系运算符
+    if (current_token &&
+        (strstr(current_token, "(P 5)") ||  // ==
+         strstr(current_token, "(P 6)") ||  // <=
+         strstr(current_token, "(P 7)") ||  // <
+         strstr(current_token, "(P 10)")||  //>
+         strstr(current_token, "(P 17)") || //!=
+         strstr(current_token, "(P 18)") //>=
+            ))
+    {
+
+        char rel_op[3] = { 0 }; // 初始化为空字符串，确保字符串正确终止
+
+        if (strstr(current_token, "(P 10)")) { // >
+            strcpy(rel_op, ">");
+            consume();
+        }
+        else if (strstr(current_token, "(P 7)")) { // <
+            strcpy(rel_op, "<");
+            consume();
+        }
+        else if (strstr(current_token, "(P 5)")) { // ==
+            strcpy(rel_op, "==");
+            consume();
+        }
+        else if (strstr(current_token, "(P 6)")) { // <=
+            strcpy(rel_op, "<=");
+            consume();
+        }
+        else if (strstr(current_token, "(P 17)")) { // !=
+            strcpy(rel_op, "!=");
+            consume();
+        }
+        else if (strstr(current_token, "(P 18)")) { // >=
+            strcpy(rel_op, ">=");
+            consume();
+        }
+        else {
+            semantic_error("不支持的关系运算符");
+        }
+
+        // 解析右操作数（如"10"或"c"）
+        char* right_operand = parse_expression_for_assignment();
+
+        // 生成关系表达式的四元式（如 a > 10 → T1 = a > 10）
+        char* temp_result = (char*)malloc(10);
+        sprintf(temp_result, "T%d", quad_count + 1);
+        generate_quad(rel_op, left_operand, right_operand, temp_result);
+
+        // 释放左右操作数的内存（如果是临时变量）
+        if (strncmp(left_operand, "T", 1) == 0) {
+            free(left_operand);
+        }
+        if (strncmp(right_operand, "T", 1) == 0) {
+            free(right_operand);
+        }
+
+        return temp_result;
+    }
+    // 如果没有关系运算符，直接返回左操作数（如单个变量或常量）
+    return left_operand;
 }
 
 // 分析while语句
