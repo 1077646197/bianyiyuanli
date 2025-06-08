@@ -5,7 +5,9 @@
 #include <string.h>
 #include <ctype.h>
 
-
+char* parse_expression_for_assignment();
+char* parse_term();
+char* parse_factor();
 void semantic_error(const char* message);        // 输出语义错误信息并终止程序
 int find_symbol(const char* name, int scope);    // 在符号表中查找变量（返回索引或-1）
 void add_symbol(const char* name, int type);     // 添加新变量到符号表（检查重复）
@@ -252,11 +254,11 @@ int add_constant(const char* value, int type) {
 }
 
 // 获取常量的四元式表示
-char* get_constant_quad(const char* value, int type) {
+char* get_constant_quad(char* value, int type) {
     int idx = add_constant(value, type);
     char* buf = (char*)malloc(10);
     sprintf(buf, "%d", idx);
-    return buf;
+    return value;
 }
 
 // 分析程序
@@ -371,11 +373,11 @@ void analyze_var_decl() {
     }
 }
 // 分析赋值语句
-void analyze_assignment() {
-    char name[50];
-    sscanf(current_token, "(I %s)", name);
-    check_variable(name);  // 检查变量是否存在且已初始化
-    int var_type = get_type(name);
+/*void analyze_assignment() {
+    int id;
+    sscanf(current_token, "(I %d)", &id);
+    check_variable(identifiers[id-1]);  // 检查变量是否存在且已初始化
+    int var_type = get_type(identifiers[id - 1]);
     consume();  // 消耗左值标识符
 
     match("(P 11)");  // 消耗赋值运算符"="
@@ -385,26 +387,123 @@ void analyze_assignment() {
         int cid;
         sscanf(current_token, "(C1 %d)", &cid);
         char* const_val = get_constant_quad(C1[cid - 1], 1);
-        generate_assign_quad(const_val, name);
+        generate_assign_quad(const_val, identifiers[id - 1]);
     }
     else if (strstr(current_token, "(I ")) {  // 变量
         int vid;
         sscanf(current_token, "(I %d)", &vid);
-        generate_assign_quad(identifiers[vid - 1], name);
+        generate_assign_quad(identifiers[vid - 1], identifiers[id - 1]);
     }
     else {
         semantic_error("不支持的右值表达式类型");
     }
 
-    set_initialized(name);  // 标记为已初始化
+    set_initialized(identifiers[id - 1]);  // 标记为已初始化
     consume();  // 消耗表达式
     match("(P 13)");  // 消耗分号";"
+}*/
+
+
+
+void analyze_assignment() {
+    int id;
+    sscanf(current_token, "(I %d)", &id);
+    char* lhs_name = identifiers[id - 1];
+    check_variable(lhs_name);  // 检查左值变量是否存在且已初始化
+    int var_type = get_type(lhs_name);
+    consume();  // 消耗左值标识符
+
+    match("(P 11)");  // 消耗赋值运算符"="
+
+    // 解析右值表达式（支持加减乘除，遵循运算符优先级）
+    char* expr_quad = parse_expression_for_assignment();
+
+    // 生成赋值四元式（右值结果 -> 左值变量）
+    generate_assign_quad(expr_quad, lhs_name);
+
+    set_initialized(lhs_name);  // 标记左值为已初始化
+    match("(P 13)");  // 消耗分号";"
 }
+
+// 解析表达式（处理加减运算）
+char* parse_expression_for_assignment() {
+    char* result = parse_term(); // 乘除运算结果（T2=4）
+
+    // 处理加减运算符（+ -）
+    while (current_token && (strstr(current_token, "(P 8)") || strstr(current_token, "(P 1)"))) {
+        char* op = (strstr(current_token, "(P 8)")) ? "+" : "-";
+        consume(); // 消耗运算符（如+）
+
+        char* operand = parse_term(); // 修正：
+
+        // 生成加法四元式（如T2+1=T3）
+        char temp_result[10];
+        sprintf(temp_result, "T%d", quad_count + 1);
+        generate_quad(op, result, operand, temp_result);
+        strcpy(result, temp_result);
+    }
+
+    return result;
+}
+
+// 解析项（处理乘除运算）
+char* parse_term() {
+    char* result = parse_factor(); // 解析因子（如常量2）
+
+    // 处理乘除运算符（* /）
+    while (current_token && (strstr(current_token, "(P 9)") || strstr(current_token, "(P 2)"))) {
+        char* op = (strstr(current_token, "(P 9)")) ? "*" : "/";
+        consume(); // 消耗运算符（如*）
+
+        char* operand = parse_factor(); // 解析下一个因子（如另一个2）
+
+        // 生成乘除四元式（如2*2=T2）
+        char temp_result[10];
+        sprintf(temp_result, "T%d", quad_count + 1);
+        generate_quad(op, result, operand, temp_result);
+        strcpy(result, temp_result);
+    }
+
+    return result;
+}
+
+// 解析因子（变量、常量或括号表达式）
+char* parse_factor() {
+    char* result = (char*)malloc(50);
+    strcpy(result, "");
+
+    if (strstr(current_token, "(I ")) {  // 变量
+        int vid;
+        sscanf(current_token, "(I %d)", &vid);
+        strcpy(result, identifiers[vid - 1]);
+        check_variable(identifiers[vid - 1]);
+        consume();
+    }
+    else if (strstr(current_token, "(C1 ")) {  // 整型常量
+        int cid;
+        sscanf(current_token, "(C1 %d)", &cid);
+        strcpy(result, get_constant_quad(C1[cid - 1], 1));
+        consume();
+    }
+    else if (strstr(current_token, "(P 3)")) {  // 左括号"(", 处理括号表达式
+        consume(); // 消耗左括号
+        result = parse_expression_for_assignment(); // 递归解析表达式
+        match("(P 4)"); // 消耗右括号")"
+    }
+    else {
+        semantic_error("表达式因子无效");
+    }
+
+    return result;
+}
+
+
+
 
 // 分析语句
 void analyze_statement() {
     if (current_token && strstr(current_token, "(I ")) {
-        char* next = lookahead(1);
+        char* next = lookahead(2);
         if (next && strstr(next, "(P 11)")) {  // 赋值语句
             analyze_assignment();
         }

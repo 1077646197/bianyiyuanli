@@ -83,7 +83,7 @@ int main()
     printf("\n");
 //===========================================
  
-    // 初始化语法分析
+   /* // 初始化语法分析
     token_index = 0;
     current_token = lookahead(1);
 
@@ -94,11 +94,11 @@ int main()
         return 1;
     }
     // 输出结果
-    printf("\n语法分析成功\n"); 
+    printf("\n语法分析成功\n"); */
 //==================================================
  
     // 执行语义分析并输出符号表结果
-    //analyze_program();
+    analyze_program();
 
     return 0;
 }
