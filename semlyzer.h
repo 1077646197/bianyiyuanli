@@ -38,6 +38,7 @@ void print_activation_records();                 // 打印活动记录表
 void print_constant_table();                     // 打印常数表
 void typetrans(int type);                        // 将类型码转换为字符表示（i/r/c等）
 char* parse_condition_expression();
+void generate_while_quad(const char* cond, const char* target);
 
 // 外部变量声明（假设来自词法分析器）
 extern char identifiers[100][50];    // 标识符表
@@ -197,17 +198,23 @@ void generate_quad(const char* op, const char* arg1, const char* arg2, const cha
 
 // 生成赋值四元式
 void generate_assign_quad(const char* src, const char* dest) {
-    generate_quad("=", src, "", dest);
+    generate_quad("=", src, "_", dest);
 }
 
 // 生成条件跳转四元式
 void generate_if_quad(const char* cond, const char* target) {
-    generate_quad("if", target, "", "");
+    generate_quad("if", target, "_", "_");
 }
 
 // 生成无条件跳转四元式
 void generate_goto_quad(const char* target) {
-    generate_quad("goto", "", "", target);
+    generate_quad("goto", "_", "_", target);
+}
+
+//do四元式
+void generate_while_quad(const char* cond, const char* target)
+{
+    generate_quad("do", target, "_", "_");
 }
 
 // 进入新作用域
@@ -382,7 +389,6 @@ void analyze_assignment() {
     int id;
     sscanf(current_token, "(I %d)", &id);
     char* lhs_name = identifiers[id - 1];
-    printf("%s", lhs_name);
     consume();  // 消耗左值标识符
 
     match("(P 11)");  // 消耗赋值运算符"="
@@ -393,8 +399,6 @@ void analyze_assignment() {
     // 生成赋值四元式（右值结果 -> 左值变量）
    
     generate_assign_quad(expr_quad, lhs_name);
-    printf("%s", expr_quad);
-    printf("%s", lhs_name);
     match("(P 13)");  // 消耗分号";"
 }
 
@@ -473,8 +477,6 @@ char* parse_factor() {
 
 
 
-
-
 // 分析语句
 void analyze_statement() {
     if (current_token && strstr(current_token, "(I ")) {
@@ -519,10 +521,12 @@ void analyze_if_stmt() {
 
     // 处理else部分（如果有）
     if (current_token && strstr(current_token, "(K 14)")) {
+        generate_quad("el", "_", "_", "_");
+
         // 生成跳转到else后代码的指令
         char target_end[10];
         sprintf(target_end, "T%d", quad_count + 1);
-        generate_goto_quad(target_end);
+       // generate_goto_quad(target_end);
 
         // 回填else分支的目标
         strcpy(quad[quad_count - 2].result, target_end);
@@ -535,7 +539,7 @@ void analyze_if_stmt() {
         // 回填else分支的目标（如果没有else，则跳转到if块之后）
         strcpy(quad[quad_count - 1].result, target_false);
     }*/ 
-    generate_quad("ie", " ", " ", "");
+    generate_quad("ie", "_", "_", "_");
 }
 
 // 解析条件表达式（支持关系运算符，修正consume调用）
@@ -608,50 +612,40 @@ char* parse_condition_expression() {
 
 // 分析while语句
 void analyze_while_stmt() {
+    generate_quad("wl", "_", "_", "_");
     match("(K 5)");  // 消耗"while"关键字
     match("(P 3)");  // 消耗左括号"("
 
-    // 记录循环开始位置
+    // 记录循环开始位置（标签）
     char loop_start[10];
-    sprintf(loop_start, "L%d", quad_count);
+    sprintf(loop_start, "T%d", quad_count);
 
-    // 检查条件表达式类型
-    int cond_type = check_expression_type();
-    if (cond_type != 1) {
-        semantic_error("条件表达式必须为整数类型");
-    }
+    // 解析条件表达式（使用与if语句相同的表达式解析函数）
+    char* cond_result = parse_condition_expression();
 
-    // 生成条件跳转四元式
-    char cond[50];
-    if (strstr(current_token, "(I ")) {
-        int id;
-        sscanf(current_token, "(I %d)", &id);
-        strcpy(cond, identifiers[id - 1]);
+    // 生成条件跳转四元式（条件为真时跳转到循环体，否则跳出循环）
+    char loop_exit[10];
+    sprintf(loop_exit, "T%d", quad_count);
+    generate_while_quad(cond_result, loop_exit);
+
+    // 释放条件表达式结果的内存
+    if (strncmp(cond_result, "T", 1) == 0) {
+        free(cond_result);
     }
-    else if (strstr(current_token, "(C1 ")) {
-        int cid;
-        sscanf(current_token, "(C1 %d)", &cid);
-        sprintf(cond, "C%d", add_constant(C1[cid - 1], 1));
-    }
-    consume();  // 消耗条件表达式
 
     match("(P 4)");  // 消耗右括号")"
-
-    // 生成条件跳转和循环结束位置
-    char loop_end[10];
-    sprintf(loop_end, "L%d", quad_count + 1);
-    generate_if_quad(cond, loop_end);
 
     // 分析循环体
     enter_scope();
     analyze_block();
     exit_scope();
 
-    // 生成无条件跳转回到循环开始
-    generate_goto_quad(loop_start);
+    // 生成无条件跳转回到循环开始处
+    //generate_goto_quad(loop_start);
 
-    // 回填循环结束位置
-    strcpy(quad[quad_count - 2].result, loop_end);
+    // 回填条件跳转的目标标签（循环结束位置）
+    strcpy(quad[quad_count - 2].result, loop_exit);
+    generate_quad("we", "_", "_", "_");
 }
 
 // 分析代码块
