@@ -106,7 +106,7 @@ int is_token_type(const char* token, const char* type) {
     return strcmp(token, type) == 0;
 }
 
-// 向前查看n个Token
+// 向后查看n个Token
 char* lookahead(int n) {
     if (token_index + n - 1 < Token_count) {
         return Token[token_index + n - 1];
