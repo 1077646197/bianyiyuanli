@@ -382,8 +382,7 @@ void analyze_assignment() {
     int id;
     sscanf(current_token, "(I %d)", &id);
     char* lhs_name = identifiers[id - 1];
-    check_variable(lhs_name);  // 检查左值变量是否存在且已初始化
-    int var_type = get_type(lhs_name);
+    printf("%s", lhs_name);
     consume();  // 消耗左值标识符
 
     match("(P 11)");  // 消耗赋值运算符"="
@@ -392,9 +391,10 @@ void analyze_assignment() {
     char* expr_quad = parse_expression_for_assignment();
 
     // 生成赋值四元式（右值结果 -> 左值变量）
+   
     generate_assign_quad(expr_quad, lhs_name);
-
-    set_initialized(lhs_name);  // 标记左值为已初始化
+    printf("%s", expr_quad);
+    printf("%s", lhs_name);
     match("(P 13)");  // 消耗分号";"
 }
 
@@ -500,7 +500,7 @@ void analyze_if_stmt() {
     char target_true[10], target_false[10];
     sprintf(target_true, "T%d", quad_count);
     generate_if_quad(cond_result, target_true);  // 条件表达式结果作为条件
-    sprintf(target_false, "L%d", quad_count + 2);
+    //sprintf(target_false, "L%d", quad_count + 2);
     //generate_goto_quad(target_false);
 
     // 释放条件表达式结果的内存
@@ -514,10 +514,8 @@ void analyze_if_stmt() {
     match("(P 4)");  // 消耗右括号")"
 
     // 分析if代码块
-    enter_scope();
     analyze_block();
 
-    exit_scope();
 
     // 处理else部分（如果有）
     if (current_token && strstr(current_token, "(K 14)")) {
@@ -530,15 +528,13 @@ void analyze_if_stmt() {
         strcpy(quad[quad_count - 2].result, target_end);
 
         consume();  // 消耗"else"关键字
-        enter_scope();
         analyze_block();
-        exit_scope();
     }
 
-    else {
+   /*else {
         // 回填else分支的目标（如果没有else，则跳转到if块之后）
         strcpy(quad[quad_count - 1].result, target_false);
-    }
+    }*/ 
     generate_quad("ie", " ", " ", "");
 }
 
