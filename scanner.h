@@ -88,37 +88,41 @@ int add_to_identifiers(const char* str) {
 }
 
 // 向常整数表添加元素
-void add_to_C1(const char* str) {
+int add_to_C1(const char* str) {
     for (int i = 0; i < C1_count; i++) {
-        if (strcmp(C1[i], str) == 0) return;
+        if (strcmp(C1[i], str) == 0) return i+1;
     }
-    strcpy(C1[C1_count++], str);
+    strcpy(C1[C1_count], str);
+    return ++C1_count;
 }
 
 // 向常实数表添加元素
-void add_to_C2(const char* str) {
+int add_to_C2(const char* str) {
     for (int i = 0; i < C2_count; i++) {
-        if (strcmp(C2[i], str) == 0) return;
+        if (strcmp(C2[i], str) == 0) return i+1;
     }
-    strcpy(C2[C2_count++], str);
+    strcpy(C2[C2_count], str);
+    return ++C2_count;
 }
 
 // 向字符常量表添加元素
-void add_to_CT(const char* str) {
+int add_to_CT(const char* str) {
     for (int i = 0; i < CT_count; i++) {
         if (strcmp(CT[i], str) == 0)
-            return;
+            return i+1;
     }
-    strcpy(CT[CT_count++], str);
+    strcpy(CT[CT_count], str);
+    return ++CT_count;
 }
 
 // 向字符串常量表添加元素
-void add_to_ST(const char* str) {
+int add_to_ST(const char* str) {
     for (int i = 0; i < ST_count; i++) {
         if (strcmp(ST[i], str) == 0)
-            return;
+            return i+1;
     }
-    strcpy(ST[ST_count++], str);
+    strcpy(ST[ST_count], str);
+    return ++ST_count;
 }
 
 // 检查是否是关键字，是则返回编号，否则返回0
@@ -208,9 +212,9 @@ void scan(const char* source) {
                 return;
             }
             i++;
-            add_to_CT(ct);
+            int index = add_to_CT(ct);
             if (Token_count < 100) {
-                sprintf(Token[Token_count], "(CT %d)", CT_count);
+                sprintf(Token[Token_count], "(CT %d)", index);
                 Token_count++;
             }
             continue;
@@ -226,9 +230,9 @@ void scan(const char* source) {
             }
             st[j] = '\0';
             i++;
-            add_to_ST(st);
+            int index = add_to_ST(st);
             if (Token_count < 100) {
-                sprintf(Token[Token_count], "(ST %d)", ST_count);
+                sprintf(Token[Token_count], "(ST %d)", index);
                 Token_count++;
             }
             continue;
@@ -249,9 +253,9 @@ void scan(const char* source) {
                     long dec = strtol(num, NULL, 16);
                     char dec_str[50];
                     sprintf(dec_str, "%ld", dec);
-                    add_to_C1(dec_str);
+                    int index = add_to_C1(dec_str);
                     if (Token_count < 100) {
-                        sprintf(Token[Token_count], "(C1 %d)", C1_count);
+                        sprintf(Token[Token_count], "(C1 %d)", index);
                         Token_count++;
                     }
                     continue;
@@ -263,9 +267,9 @@ void scan(const char* source) {
                         num[j++] = source[i++];
                     }
                     num[j] = '\0';
-                    add_to_C1(num);
+                    int  index = add_to_C1(num);
                     if (Token_count < 100) {
-                        sprintf(Token[Token_count], "(C1 %d)", C1_count);
+                        sprintf(Token[Token_count], "(C1 %d)", index);
                         Token_count++;
                     }
                     continue;
@@ -322,16 +326,16 @@ void scan(const char* source) {
                         return;
                     }
 
-                    add_to_C2(float_num);
+                    int index = add_to_C2(float_num);
                     if (Token_count < 100) {
-                        sprintf(Token[Token_count], "(C2 %d)", C2_count);
+                        sprintf(Token[Token_count], "(C2 %d)", index);
                         Token_count++;
                     }
                 }
                 else {
-                    add_to_C1(num);
+                    int index = add_to_C1(num);
                     if (Token_count < 100) {
-                        sprintf(Token[Token_count], "(C1 %d)", C1_count);
+                        sprintf(Token[Token_count], "(C1 %d)", index);
                         Token_count++;
                     }
                 }
@@ -358,9 +362,9 @@ void scan(const char* source) {
                     }
                 }
                 float_num[j] = '\0';
-                add_to_C2(float_num);
+                int index = add_to_C2(float_num);
                 if (Token_count < 100) {
-                    sprintf(Token[Token_count], "(C2 %d)", C2_count);
+                    sprintf(Token[Token_count], "(C2 %d)", index);
                     Token_count++;
                 }
             }
