@@ -27,7 +27,7 @@ char* keywords[][2] = {
     {"else", "14"},
     {"main", "15"},
     {"char","16"},
-    {"bool","16"}
+    {"bool","17"}
 };
 int keyword_count = sizeof(keywords) / sizeof(keywords[0]);
 
@@ -50,7 +50,8 @@ char* delimiters[][2] = {
     {"{", "15"},
     {"}", "16"},
     {"!=","17"},
-    {">=","18"}
+    {">=","18"},
+    {"--", "19"}
 };
 int delimiter_count = sizeof(delimiters) / sizeof(delimiters[0]);
 
@@ -78,11 +79,12 @@ int bool_count = 0;
 int iscorret = 1;//是否正确
 
 // 向标识符表添加元素
-void add_to_identifiers(const char* str) {
+int add_to_identifiers(const char* str) {
     for (int i = 0; i < id_count; i++) {
-        if (strcmp(identifiers[i], str) == 0) return;
+        if (strcmp(identifiers[i], str) == 0) return i+1;
     }
-    strcpy(identifiers[id_count++], str);
+    strcpy(identifiers[id_count], str);
+    return ++id_count;
 }
 
 // 向常整数表添加元素
@@ -187,9 +189,9 @@ void scan(const char* source) {
                 }
             }
             else {
-                add_to_identifiers(id);
+                int index =  add_to_identifiers(id);
                 if (Token_count < 100) {
-                    sprintf(Token[Token_count], "(I %d)", id_count);
+                    sprintf(Token[Token_count], "(I %d)", index);
                     Token_count++;
                 }
             }

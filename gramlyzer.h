@@ -3,11 +3,21 @@
 //程序定义
 程序 → 声明列表
 声明列表 → 声明 声明列表 | ε
-声明 → 变量声明 | 赋值语句 | if语句 | while语句
+声明 → 变量声明 | 赋值语句 | if语句 | while语句 | 自增语句 | 自减语句 | 结构体声明 | 结构体变量声明
+
+// 新增：结构体声明
+结构体声明 → struct 标识符 { 结构体成员列表 } ;
+结构体成员列表 → 结构体成员 结构体成员列表 | ε
+结构体成员 → 类型说明符 标识符 ;
+
+// 新增：结构体变量声明
+结构体变量声明 → struct 标识符 标识符 (赋值运算符 结构体初始化表达式)? ;
+结构体初始化表达式 → { 表达式列表 }
+表达式列表 → 表达式 (, 表达式)*
 
 // 变量声明
 变量声明 → 类型说明符 标识符 (赋值运算符 表达式)? ;
-类型说明符 → int | void
+类型说明符 → int | void | struct 标识符  // 新增结构体类型
 
 // 赋值语句
 赋值语句 → 标识符 = 表达式 ;
@@ -25,6 +35,12 @@ if语句 → if ( 条件 ) 代码块 (else 代码块)？
 
 // while 循环
 while语句 → while ( 条件 ) 代码块
+
+//自增语句
+自增语句 → 标识符 ++ ;
+
+//自减语句
+自减语句 → 标识符 -- ;
 
 // 代码块
 代码块 → { 声明列表 }
@@ -55,13 +71,14 @@ char* lookahead(int n);// 向前查看n个Token
 void sync_to_statement_end();// 同步函数：跳过Token直到遇到指定类型或语句结束
 void consume();// 消耗当前Token并移动到下一个
 void match(const char* token_type);// 匹配特定类型的Token并消耗
+void match_prefix(const char* prefix);
 void syntax_error(const char* message);// 错误处理
 
 
 // 解析函数声明（对应文法非终结符）
 void parse_program();           // 程序 → 声明列表
 void parse_declaration_list();  // 声明列表 → 声明 声明列表 | ε
-void parse_declaration();       // 声明 → 变量声明 | 赋值语句 | if语句 | while语句
+void parse_declaration();       // 声明 → 变量声明 | 赋值语句 | if语句 | while语句 | 自增语句 | 自减语句 | 结构体声明 | 结构体变量声明
 void parse_var_decl();          // 变量声明 → 类型说明符 标识符 (赋值运算符 表达式)? ;
 void parse_type_specifier();    // 类型说明符 → int | void
 void parse_assign_stmt();       // 赋值语句 → 标识符 = 表达式 ;
@@ -74,6 +91,15 @@ void parse_expr();              // 表达式 → 加法表达式
 void parse_additive_expr();     // 加法表达式 → 乘法表达式     (+ 乘法表达式 | - 乘法表达式)的*闭包
 void parse_multiplicative_expr(); // 乘法表达式 → 基本表达式     (* 基本表达式 | / 基本表达式)的*闭包
 void parse_primary_expr();      // 基本表达式 → 标识符 | 数字 | ( 表达式 )
+void parse_incr_stmt();         //自增语句 → 标识符++;
+void parse_decr_stmt();         //自减语句 → 标识符--;
+void parse_struct_decl();         // 结构体声明 → struct 标识符 { 结构体成员列表 } ;
+void parse_struct_member_list();  // 结构体成员列表 → 结构体成员 结构体成员列表 | ε
+void parse_struct_member();       // 结构体成员 → 类型说明符 标识符 ;
+void parse_struct_var_decl();     // 结构体变量声明 → struct 标识符 标识符 (赋值运算符 结构体初始化表达式)? ;
+void parse_struct_init_expr();    // 结构体初始化表达式 → { 表达式列表 }
+void parse_expr_list();           // 表达式列表 → 表达式 (, 表达式)*
+
 
 // 精确匹配Token类型（如"(K 5)"）
 int is_token_type(const char* token, const char* type) {
@@ -142,15 +168,32 @@ void syntax_error(const char* message) {
     iscorret = 0; // 与词法分析的错误标志统一
 }
 
-// 解析程序：program → 声明列表
+//// 解析程序：program → 声明列表
+//void parse_program() {
+//    parse_declaration_list();
+//    // 程序结束时应无剩余Token
+//    if (token_index < Token_count) {
+//        syntax_error("程序末尾存在多余Token");
+//    }
+//}
 void parse_program() {
+    printf("开始解析程序，Token总数: %d\n", Token_count);
+    for (int i = 0; i < Token_count; i++) {
+        printf("Token[%d]: %s\n", i, Token[i]);
+    }
+
     parse_declaration_list();
-    // 程序结束时应无剩余Token
+
+    printf("解析完成后，当前Token索引: %d\n", token_index);
     if (token_index < Token_count) {
+        printf("未处理的Token: ");
+        for (int i = token_index; i < Token_count; i++) {
+            printf("%s ", Token[i]);
+        }
+        printf("\n");
         syntax_error("程序末尾存在多余Token");
     }
 }
-
 // 解析声明列表：declaration_list → 声明 声明列表 | ε
 void parse_declaration_list() {
     if (current_token &&
@@ -182,7 +225,19 @@ void parse_declaration() {
             return;
         }
 
-        // 2.2 带括号的表达式（可能是条件或函数调用）
+        // 2.2 自增语句（标识符 ++ ;）
+        if (next_token && strstr(next_token, "(P 14)")) {
+            parse_incr_stmt();
+            return;
+        }
+
+        // 2.3 自减语句（标识符 -- ;）
+        if (next_token && strstr(next_token, "(P 19)")) {
+            parse_decr_stmt();
+            return;
+        }
+
+        // 2.4 带括号的表达式（可能是条件或函数调用）
         if (next_token && strstr(next_token, "(P 3)")) {
             // 保存当前状态用于错误恢复
             char* prev_token = current_token;
@@ -219,8 +274,8 @@ void parse_declaration() {
             return;
         }
 
-        // 2.3 其他情况：标识符后既非=也非(
-        syntax_error("标识符后缺少赋值运算符或左括号");
+        // 2.5 其他情况：标识符后既非=也非(也非++/--
+        syntax_error("标识符后缺少赋值运算符/自增/自减运算符/左括号");
         consume();  // 跳过错误Token
         return;
     }
@@ -237,7 +292,42 @@ void parse_declaration() {
         return;
     }
 
-    // 5. 未识别的声明类型
+    // 5. 处理结构体相关声明（结构体声明或结构体变量声明）
+    if (current_token && strstr(current_token, "(K 7)")) {
+        // 保存当前状态用于回溯
+        char* prev_token = current_token;
+        int prev_index = token_index;
+
+        // 消耗struct关键字
+        consume();
+
+        // 检查是否为结构体声明（struct 标识符 { ... }）
+        if (current_token && strstr(current_token, "(I ") && lookahead(2) && strstr(lookahead(2), "(P 15)")) {
+            token_index = prev_index;
+            current_token = prev_token;
+            parse_struct_decl();
+            return;
+        }
+
+        // 检查是否为结构体变量声明（struct 类型名 变量名）
+        else if (current_token && strstr(current_token, "(I ") && lookahead(2) && strstr(lookahead(2), "(I ")) {
+            token_index = prev_index;
+            current_token = prev_token;
+            parse_struct_var_decl();
+            return;
+        }
+
+        // 都不是，错误恢复
+        else {
+            token_index = prev_index;
+            current_token = prev_token;
+            syntax_error("无效的结构体声明或变量声明");
+            sync_to_statement_end();
+            return;
+        }
+    }
+
+    // 7. 未识别的声明类型
     syntax_error("缺少声明或类型不支持");
     if (current_token) consume();  // 跳过错误Token
 }
@@ -264,13 +354,25 @@ void parse_var_decl() {
     }
 }
 
-// 解析类型说明符：type_specifier → 整型 | 空类型
+// 解析类型说明符：type_specifier → 整型 | 空类型 | struct 标识符
 void parse_type_specifier() {
-    if (current_token && (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)"))) {
-        consume(); // 消耗类型说明符
+    // 支持基础类型和结构体类型
+    if (current_token &&
+        (strstr(current_token, "(K 1)") ||   // int
+            strstr(current_token, "(K 2)") ||   // void
+            strstr(current_token, "(K 7)")))    // struct
+    {
+        // 如果是struct类型，需要额外处理
+        if (strstr(current_token, "(K 7)")) {
+            consume(); // 消耗"struct"
+            match_prefix("(I "); // 消耗结构体类型名
+        }
+        else {
+            consume(); // 消耗基础类型(int/void)
+        }
     }
     else {
-        syntax_error("缺少类型说明符");
+        syntax_error("缺少类型说明符（int/void/struct）");
     }
 }
 
@@ -378,3 +480,71 @@ void parse_primary_expr() {
     }
 }
 
+// 新增：解析自增语句 → 标识符 ++ ;
+void parse_incr_stmt() {
+    match_prefix("(I ");  // 匹配标识符
+    match("(P 14)");     // 匹配"++"
+    match("(P 13)");     // 匹配";"
+}
+
+// 新增：解析自减语句 → 标识符 -- ;
+void parse_decr_stmt() {
+    match_prefix("(I ");  // 匹配标识符
+    match("(P 19)");     // 匹配"--"
+    match("(P 13)");     // 匹配";"
+}
+
+// 解析结构体声明：struct_decl → struct 标识符 { 结构体成员列表 } ;
+void parse_struct_decl() {
+    match("(K 7)");              // 匹配"struct"关键字
+    match_prefix("(I ");         // 匹配结构体名称（标识符）
+    match("(P 15)");             // 匹配"{"
+    parse_struct_member_list();  // 解析结构体成员列表
+    match("(P 16)");             // 匹配"}"
+    match("(P 13)");             // 匹配";"
+}
+
+// 解析结构体成员列表：struct_member_list → 结构体成员 结构体成员列表 | ε
+void parse_struct_member_list() {
+    if (current_token && (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)"))) {
+        parse_struct_member();
+        parse_struct_member_list();
+    }
+    // 空产生式情况：不做处理
+}
+
+// 解析结构体成员：struct_member → 类型说明符 标识符 ;
+void parse_struct_member() {
+    parse_type_specifier();       // 解析类型说明符（int/void）
+    match_prefix("(I ");          // 匹配成员变量名（标识符）
+    match("(P 13)");              // 匹配";"
+}
+
+// 解析结构体变量声明：struct_var_decl → struct 标识符 标识符 (赋值运算符 结构体初始化表达式)? ;
+void parse_struct_var_decl() {
+    match("(K 7)");              // 匹配"struct"关键字
+    match_prefix("(I ");         // 匹配结构体类型名
+    match_prefix("(I ");         // 匹配变量名
+    // 可选的初始化部分
+    if (current_token && strstr(current_token, "(P 11)")) { // "="
+        match("(P 11)");
+        parse_struct_init_expr();
+    }
+    match("(P 13)");             // 匹配";"
+}
+
+// 解析结构体初始化表达式：struct_init_expr → { 表达式列表 }
+void parse_struct_init_expr() {
+    match("(P 15)");             // 匹配"{"
+    parse_expr_list();            // 解析表达式列表
+    match("(P 16)");             // 匹配"}"
+}
+
+// 解析表达式列表：expr_list → 表达式 (, 表达式)*
+void parse_expr_list() {
+    parse_expr();                 // 解析第一个表达式
+    while (current_token && strstr(current_token, "(P 12)")) { // 匹配","
+        match("(P 12)");
+        parse_expr();             // 解析后续表达式
+    }
+}
