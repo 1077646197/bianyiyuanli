@@ -173,19 +173,10 @@ int get_type(const char* name) {
 // 类型检查：返回表达式类型
 int check_expression_type() {
     if (current_token && strstr(current_token, "(I ")) {
-        char name[50];
-        sscanf(current_token, "(I %s)", name);
-        return get_type(name);  // 变量类型
-    }
-    else if (current_token && strstr(current_token, "(C1 ")) {
-        return 1;  // int类型常量
-    }
-    else if (current_token && strstr(current_token, "(C2 ")) {
-        return 2;  // float类型常量
-    }
-    else if (current_token && strstr(current_token, "(CT ")) {
-        return 3;  // char类型常量
-    }
+        int id;
+        sscanf(current_token, "(I %d)", &id);
+        return get_type(identifiers[id-1]);  // 变量类型
+    } 
     return 0;  // 未知类型
 }
 
