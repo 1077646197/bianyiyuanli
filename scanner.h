@@ -51,7 +51,9 @@ char* delimiters[][2] = {
     {"}", "16"},
     {"!=","17"},
     {">=","18"},
-    {"--", "19"}
+    {"--", "19"},
+    {"[", "20"},
+    {"]", "21"}
 };
 int delimiter_count = sizeof(delimiters) / sizeof(delimiters[0]);
 
