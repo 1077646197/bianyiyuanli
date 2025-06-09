@@ -8,7 +8,7 @@
 // 新增：结构体声明
 结构体声明 → struct 标识符 { 结构体成员列表 } ;
 结构体成员列表 → 结构体成员 结构体成员列表 | ε
-结构体成员 → 类型说明符 标识符 ;
+结构体成员 → 类型说明符 标识符 (赋值运算符 表达式)? ;
 
 // 新增：结构体变量声明
 结构体变量声明 → struct 标识符 标识符 (赋值运算符 结构体初始化表达式)? ;
@@ -95,7 +95,7 @@ void parse_incr_stmt();         //自增语句 → 标识符++;
 void parse_decr_stmt();         //自减语句 → 标识符--;
 void parse_struct_decl();         // 结构体声明 → struct 标识符 { 结构体成员列表 } ;
 void parse_struct_member_list();  // 结构体成员列表 → 结构体成员 结构体成员列表 | ε
-void parse_struct_member();       // 结构体成员 → 类型说明符 标识符 ;
+void parse_struct_member();       // 结构体成员 → 类型说明符 标识符 (赋值运算符 表达式)? ;
 void parse_struct_var_decl();     // 结构体变量声明 → struct 标识符 标识符 (赋值运算符 结构体初始化表达式)? ;
 void parse_struct_init_expr();    // 结构体初始化表达式 → { 表达式列表 }
 void parse_expr_list();           // 表达式列表 → 表达式 (, 表达式)*
@@ -518,6 +518,10 @@ void parse_struct_member_list() {
 void parse_struct_member() {
     parse_type_specifier();       // 解析类型说明符（int/void）
     match_prefix("(I ");          // 匹配成员变量名（标识符）
+    if (current_token && strstr(current_token, "(P 11)")) {
+        consume();
+        parse_expr();
+    }
     match("(P 13)");              // 匹配";"
 }
 
