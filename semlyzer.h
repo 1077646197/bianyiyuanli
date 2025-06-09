@@ -67,7 +67,7 @@ void print_quadruples();                         // 打印四元式列表
 void print_activation_records();                 // 打印活动记录表
 void print_constant_table();                     // 打印常数表
 void typetrans(int type);                        // 将类型码转换为字符表示（i/r/c等）
-char* parse_condition_expression();
+char* parse_condition_expression();         
 void generate_while_quad(const char* cond, const char* target);
 void analyze_struct_stmt();
 void typetrans(int type);
@@ -344,6 +344,8 @@ void analyze_declaration_list() {
     while (current_token && token_index < Token_count) {
         if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")) {
             analyze_var_decl();  // 变量声明
+
+               //后续可以添加函数判断
         }
         else if (strstr(current_token, "(I ")) {
             analyze_statement();  // 赋值语句或函数调用
