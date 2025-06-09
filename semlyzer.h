@@ -10,7 +10,7 @@ char* parse_term();
 char* parse_factor();
 void semantic_error(const char* message);        // 输出语义错误信息并终止程序
 int find_symbol(const char* name, int scope);    // 在符号表中查找变量（返回索引或-1）
-void add_symbol(const char* name, int type);     // 添加新变量到符号表（检查重复）
+void add_symbol(const char* name, int type,int kind);     // 添加新变量到符号表（检查重复）
 void check_variable(const char* name);           // 检查变量是否存在且已初始化
 void set_initialized(const char* name);          // 标记变量为已初始化状态
 int get_type(const char* name);                  // 获取变量的类型码
@@ -39,6 +39,8 @@ void print_constant_table();                     // 打印常数表
 void typetrans(int type);                        // 将类型码转换为字符表示（i/r/c等）
 char* parse_condition_expression();
 void generate_while_quad(const char* cond, const char* target);
+void analyze_struct_stmt();
+void typetrans(int type);
 
 // 外部变量声明（假设来自词法分析器）
 extern char identifiers[100][50];    // 标识符表
@@ -114,6 +116,19 @@ void typetrans(int type) {
     }
 }
 
+// 种类转换函数（保持原typetrans逻辑）
+void kindtrans(int type) {
+    switch (type) {
+    case 1: printf("v"); break;  // 变量种类
+    case 2: printf("d"); break;  // 结构体成员类型
+    case 3: printf("t"); break;  // 类型种类
+    case 4: printf("c"); break;  // 常量种类
+    case 5: printf("f"); break;  // 函数种类
+    case 6: printf("vn"); break;  // 结构体类型
+    default: printf("?"); break; // 未知类型
+    }
+}
+
 // 语义错误处理
 void semantic_error(const char* message) {
     printf("语义错误: %s\n", message);
@@ -131,14 +146,14 @@ int find_symbol(const char* name, int scope) {
 }
 
 // 添加变量到符号表
-void add_symbol(const char* name, int type) {
+void add_symbol(const char* name, int type, int kind ) {
     if (find_symbol(name, current_scope) != -1) {
         semantic_error("重复定义的变量");
     }
     Symbol new_symbol;
     strcpy(new_symbol.name, name);
     new_symbol.type = type;
-    new_symbol.initialized = 0;  // 初始化为未初始化状态
+    new_symbol.initialized = kind;  // 初始化为未初始化状态
     new_symbol.scope = current_scope;
     symbol_table[symbol_count++] = new_symbol;
 }
@@ -307,6 +322,9 @@ void analyze_declaration_list() {
         else if (strstr(current_token, "(K 5)")) {
             analyze_while_stmt(); // while语句
         }
+        else if (strstr(current_token, "(K 7)")) {
+            analyze_struct_stmt();//struct
+        }
         else if (strstr(current_token, "(P 16)")) {
             break;
         }
@@ -342,7 +360,7 @@ void analyze_var_decl() {
         char name[50];
         strcpy(name, identifiers[id - 1]);  // 从标识符表获取名称
 
-        add_symbol(name, type);            // 添加到符号表
+        add_symbol(name, type,1);            // 添加到符号表
         add_activation_record(name, type);  // 添加到活动记录表
 
         consume();  // 消耗标识符Token
@@ -490,6 +508,99 @@ void analyze_statement() {
     }
 }
 
+
+// 分析结构体语句（定义或初始化）
+void analyze_struct_stmt() {
+    // 消耗"struct"关键字
+    match("(K 7)");  // 假设(K 20)是"struct"的Token类型
+
+    // 获取结构体名称
+    if (!strstr(current_token, "(I ")) {
+        semantic_error(current_token);
+    }
+    int struct_id;
+    sscanf(current_token, "(I %d)", &struct_id);
+    char* struct_name = identifiers[struct_id - 1];
+    consume();  // 消耗结构体名称
+
+    // 检查结构体是否已定义
+    int struct_type_id = find_symbol(struct_name,current_scope);
+    if (struct_type_id != -1) {
+        semantic_error(struct_name);
+    }
+
+    add_symbol(struct_name, 6, 3);
+
+    // 开始解析结构体成员
+    match("(P 15)");  // 消耗左花括号"{"
+
+    while (current_token && !strstr(current_token, "(P 16)")) {  // 直到遇到右花括号"}"
+        // 解析成员类型
+        int type;
+        if (strstr(current_token, "(K 1)")) {  // int类型
+            type = 1;
+            consume();
+        }
+        else if (strstr(current_token, "(K 4)")) {  // float类型
+            type = 2;
+            consume();
+        }
+        else if (strstr(current_token, "(K 16)")) {  // char类型（仅添加符号表，不处理常数表）
+            type = 3;
+            consume();
+        }
+        else {
+            semantic_error("无效的类型说明符");
+        }
+
+        if (current_token && strstr(current_token, "(I ")) {
+            int id;
+            sscanf(current_token, "(I %d)", &id);
+            char name[50];
+            strcpy(name, identifiers[id - 1]);  // 从标识符表获取名称
+
+            add_symbol(name, type,2);            // 添加到符号表
+            add_activation_record(name, type);  // 添加到活动记录表
+
+            consume();  // 消耗标识符Token
+
+            // 处理初始化（如果有赋值）
+            if (strstr(current_token, "(P 11)")) {  // 赋值运算符"="
+                consume();  // 消耗"="
+                int expr_type = check_expression_type();
+                if (expr_type != type && expr_type != 0) {
+                    semantic_error("类型不匹配");
+                }
+                // 生成赋值四元式（仅处理int和float，移除char分支）
+                if (strstr(current_token, "(C1 ")) {  // 整型常量（对应int）
+                    int cid;
+                    sscanf(current_token, "(C1 %d)", &cid);
+                    char* const_val = get_constant_quad(C1[cid - 1], 1);
+                    generate_assign_quad(const_val, name);
+                }
+                else if (strstr(current_token, "(C2 ")) {  // 浮点常量（对应float）
+                    int cid;
+                    sscanf(current_token, "(C2 %d)", &cid);
+                    char* const_val = get_constant_quad(C2[cid - 1], 2);
+                    generate_assign_quad(const_val, name);
+                }
+                else if (strstr(current_token, "(I ")) {  // 变量
+                    int vid;
+                    sscanf(current_token, "(I %d)", &vid);
+                    generate_assign_quad(identifiers[vid - 1], name);
+                }
+                consume();  // 消耗表达式Token
+            }
+            match("(P 13)");  // 消耗分号";"
+        }
+        else {
+            semantic_error("变量声明缺少标识符");
+        }
+    }
+    // 消耗右花括号
+    match("(P 16)");  // 右花括号"}"
+    match("(P 13)");  // 分号";"
+}
 // 分析if语句
 void analyze_if_stmt() {
     match("(K 12)");  // 消耗"if"关键字
@@ -664,9 +775,9 @@ void print_symbol_table() {
     for (int i = 0; i < symbol_count; i++) {
         printf("%s\t", symbol_table[i].name);
         typetrans(symbol_table[i].type);  // 使用原typetrans函数输出类型
-        printf("\t%d\t%d\n",
-            symbol_table[i].initialized,
-            symbol_table[i].scope);
+        printf("\t");
+        kindtrans(symbol_table[i].initialized);
+        printf("\t%d\n",symbol_table[i].scope);
     }
 }
 
