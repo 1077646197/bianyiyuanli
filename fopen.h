@@ -3,7 +3,6 @@
 char source[MAX_SOURCE_SIZE];
 
 
-
 void read_file(const char* filename) {
     FILE* file = fopen("program.txt", "r"); // 以只读模式打开文件
     if (file == NULL) { // 检查文件是否打开失败
@@ -49,7 +48,6 @@ void read_file(const char* filename) {
             }
         }
     }
-
     fclose(file); // 关闭文件
     
 
