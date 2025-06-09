@@ -124,8 +124,9 @@ void kindtrans(int type) {
     case 3: printf("t"); break;  // 类型种类
     case 4: printf("c"); break;  // 常量种类
     case 5: printf("f"); break;  // 函数种类
-    case 6: printf("vn"); break;  // 结构体类型
-    default: printf("?"); break; // 未知类型
+    case 6: printf("vn"); break; //换名形参
+    case 6: printf("vf"); break;  //赋值形参
+    default: printf("?"); break; // 未知种类
     }
 }
 
