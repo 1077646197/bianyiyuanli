@@ -18,7 +18,7 @@ struct后缀声明 → { 结构体成员列表 } ;    // 结构体声明
 
 //变量声明语句
 变量声明 → 基本类型 标识符 ( = 表达式 )? ;
-基本类型 → int | void
+基本类型 → int | void | float | char
 
 // 合并标识符开头的语句
 标识符语句 → 标识符 ( 赋值后缀 | 自增后缀 | 自减后缀 )
@@ -99,7 +99,7 @@ void parse_struct_suffix_decl();                      /*struct后缀声明 → { 结构
                                                                       | 标识符 ( = 结构体初始化 )? ;  // 结构体变量声明*/
 
 void parse_var_decl();                                //变量声明 → 基本类型 标识符 ( = 表达式 )? ;
-void parse_basic_type();                              //基本类型 → int | void
+void parse_basic_type();                              //基本类型 → int | void | float | char
 
 void parse_identifier_stmt();                         //标识符语句 → 标识符 ( 赋值后缀 | 自增后缀 | 自减后缀 )
 void parse_assign_suffix();                           //赋值后缀 → = 表达式;    赋值语句
@@ -222,6 +222,8 @@ void parse_declaration_list() {
     if (current_token &&
         (strstr(current_token, "(K 1)") ||   // int
             strstr(current_token, "(K 2)") ||   // void
+            strstr(current_token, "(K 4)") ||   //float
+            strstr(current_token, "(K 16)") ||  //char
             strstr(current_token, "(I ") ||     // 标识符（赋值语句/if/while）
             strstr(current_token, "(K 12)") ||  // if
             strstr(current_token, "(K 5)") ||   // while
@@ -235,7 +237,7 @@ void parse_declaration_list() {
 // 解析声明：declaration → 变量声明 | if语句 | while语句 | 标识符语句 | struct 标识符 struct后缀声明
 void parse_declaration() {
     // 1. 处理变量声明（int/void 开头）
-    if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)")) {
+    if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")) {
         parse_var_decl();
         return;
     }
@@ -293,11 +295,11 @@ void parse_var_decl() {
 
 // 解析基本类型：basic_type → int | void
 void parse_basic_type() {
-    if (current_token && (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)"))) {
-        consume(); // 消耗int或void
+    if (current_token && (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)"))) {
+        consume(); // 消耗int或void或float或void
     }
     else {
-        syntax_error("缺少基本类型说明符（int/void）");
+        syntax_error("缺少基本类型说明符（int/void/float/char）");
     }
 }
 
@@ -513,9 +515,9 @@ void parse_struct_member() {
     match("(P 13)"); // ";"
 }
 
-// 解析成员类型：member_type → int | void | struct 标识符
+// 解析成员类型：member_type → int | void | float | char | struct 标识符
 void parse_member_type() {
-    if (current_token && (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)"))) {
+    if (current_token && (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)"))) {
         consume(); // int或void
     }
     else if (current_token && strstr(current_token, "(K 7)")) {
