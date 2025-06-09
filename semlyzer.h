@@ -111,7 +111,20 @@ void typetrans(int type) {
     case 3: printf("c"); break;  // char类型
     case 4: printf("b"); break;  // bool类型
     case 5: printf("a"); break;  // 数组类型
-    case 6: printf("d"); break;  // 结构体类型
+    case 6: printf("d<——"); break;  // 结构体类型
+    default: printf("?"); break; // 未知类型
+    }
+}
+
+// 种类转换函数（保持原typetrans逻辑）
+void kindtrans(int type) {
+    switch (type) {
+    case 1: printf("v"); break;  // 变量种类
+    case 2: printf("d"); break;  // 结构体成员类型
+    case 3: printf("t"); break;  // 类型种类
+    case 4: printf("c"); break;  // 常量种类
+    case 5: printf("f"); break;  // 函数种类
+    case 6: printf("vn"); break;  // 结构体类型
     default: printf("?"); break; // 未知类型
     }
 }
