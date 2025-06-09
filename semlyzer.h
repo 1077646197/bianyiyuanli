@@ -67,7 +67,7 @@ void print_quadruples();                         // 打印四元式列表
 void print_activation_records();                 // 打印活动记录表
 void print_constant_table();                     // 打印常数表
 void typetrans(int type);                        // 将类型码转换为字符表示（i/r/c等）
-char* parse_condition_expression();
+char* parse_condition_expression();         
 void generate_while_quad(const char* cond, const char* target);
 void analyze_struct_stmt();
 void typetrans(int type);
