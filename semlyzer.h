@@ -344,6 +344,8 @@ void analyze_declaration_list() {
     while (current_token && token_index < Token_count) {
         if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")) {
             analyze_var_decl();  // 变量声明
+
+               //后续可以添加函数判断
         }
         else if (strstr(current_token, "(I ")) {
             analyze_statement();  // 赋值语句或函数调用
