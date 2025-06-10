@@ -73,6 +73,8 @@ void generate_while_quad(const char* cond, const char* target);
 void analyze_struct_stmt();
 void typetrans(int type);
 void optimize_integer_quadruples();      //优化
+//void active_information();
+
 
 
 // 外部变量声明（假设来自词法分析器）
@@ -340,6 +342,8 @@ void analyze_program() {
 
     optimize_integer_quadruples();//优化
     print_quadruples();  //优化后的四元式打印
+
+    //active_information();暂未完成
     // 检查是否有未处理的Token
     if (token_index < Token_count) {
         semantic_error("程序末尾有多余Token");
@@ -591,6 +595,9 @@ void analyze_struct_stmt() {
             type = 3;
             consume();
         }
+        else if (strstr(current_token, "(K 7)")) {  // char类型（仅添加符号表，不处理常数表）
+            //banalyze_struct_stmt();//struct
+        }
         else {
             semantic_error("无效的类型说明符");
         }
@@ -635,6 +642,7 @@ void analyze_struct_stmt() {
             }
             match("(P 13)");  // 消耗分号";"
         }
+
         else {
             semantic_error("变量声明缺少标识符");
         }
