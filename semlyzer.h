@@ -73,7 +73,7 @@ void generate_while_quad(const char* cond, const char* target);
 void analyze_struct_stmt();
 void typetrans(int type);
 void optimize_integer_quadruples();      //优化
-//void active_information();
+void active_information();
 
 
 
@@ -343,7 +343,7 @@ void analyze_program() {
     optimize_integer_quadruples();//优化
     print_quadruples();  //优化后的四元式打印
 
-    //active_information();暂未完成
+    //active_information();//暂未完成
     // 检查是否有未处理的Token
     if (token_index < Token_count) {
         semantic_error("程序末尾有多余Token");
@@ -354,7 +354,7 @@ void analyze_program() {
 // 分析声明列表
 void analyze_declaration_list() {
     while (current_token && token_index < Token_count) {
-        if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")) {
+        if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")|| strstr(current_token, "(K 17)")) {
             analyze_var_decl();  // 变量声明
 
             //后续可以添加函数判断
@@ -376,7 +376,7 @@ void analyze_declaration_list() {
         }
         else {
             printf("%s", Token[token_index]);
-            semantic_error("不支持的语句类型1111111");
+            semantic_error("不支持的语句类型");
         }
     }
 }
@@ -394,6 +394,10 @@ void analyze_var_decl() {
     }
     else if (strstr(current_token, "(K 16)")) {  // char类型（仅添加符号表，不处理常数表）
         type = 3;
+        consume();
+    }
+    else if (strstr(current_token, "(K 17)")) {  // char类型（仅添加符号表，不处理常数表）
+        type = 4;
         consume();
     }
     else {
@@ -418,12 +422,24 @@ void analyze_var_decl() {
             if (expr_type != type && expr_type != 0) {
                 semantic_error("类型不匹配");
             }
-            // 生成赋值四元式（仅处理int和float，移除char分支）
+            // 生成赋值四元式（仅处理int和float，bool，移除char分支）
             if (strstr(current_token, "(C1 ")) {  // 整型常量（对应int）
                 int cid;
                 sscanf(current_token, "(C1 %d)", &cid);
-                char* const_val = get_constant_quad(C1[cid - 1], 1);
-                generate_assign_quad(const_val, name);
+                if (type == 4 && (C1[cid - 1][0] == '0' || C1[cid - 1][0] == '1'))
+                {
+                    char* const_val = get_constant_quad(C1[cid - 1], 1);
+                    generate_assign_quad(const_val, name);
+                }
+                else if (type == 1)
+                {
+                    char* const_val = get_constant_quad(C1[cid - 1], 1);
+                    generate_assign_quad(const_val, name);
+                }
+                else 
+                {
+                     semantic_error("错误的bool声明");
+                }
             }
             else if (strstr(current_token, "(C2 ")) {  // 浮点常量（对应float）
                 int cid;
@@ -436,6 +452,7 @@ void analyze_var_decl() {
                 sscanf(current_token, "(I %d)", &vid);
                 generate_assign_quad(identifiers[vid - 1], name);
             }
+
             // 移除char类型的CT处理分支
             set_initialized(name);  // 标记为已初始化
             consume();  // 消耗表达式Token
@@ -595,6 +612,10 @@ void analyze_struct_stmt() {
             type = 3;
             consume();
         }
+        else if (strstr(current_token, "(K 17)")) {  // char类型（仅添加符号表，不处理常数表）
+            type = 4;
+            consume();
+        }
         else if (strstr(current_token, "(K 7)")) {  // char类型（仅添加符号表，不处理常数表）
             //banalyze_struct_stmt();//struct
         }
@@ -624,8 +645,20 @@ void analyze_struct_stmt() {
                 if (strstr(current_token, "(C1 ")) {  // 整型常量（对应int）
                     int cid;
                     sscanf(current_token, "(C1 %d)", &cid);
-                    char* const_val = get_constant_quad(C1[cid - 1], 1);
-                    generate_assign_quad(const_val, name);
+                    if (type == 4 && (C1[cid - 1][0] == '0' || C1[cid - 1][0] == '1'))
+                    {
+                        char* const_val = get_constant_quad(C1[cid - 1], 1);
+                        generate_assign_quad(const_val, name);
+                    }
+                    else if (type == 1)
+                    {
+                        char* const_val = get_constant_quad(C1[cid - 1], 1);
+                        generate_assign_quad(const_val, name);
+                    }
+                    else
+                    {
+                        semantic_error("错误的bool声明");
+                    }
                 }
                 else if (strstr(current_token, "(C2 ")) {  // 浮点常量（对应float）
                     int cid;
@@ -877,7 +910,8 @@ void print_constant_table() {
 //打印类型表
 void print_type_table()
 {
-    int i_, r, c=0;
+    int i_,r,c,b;
+    i_ = r = c = b = 0;
     int d = 0;
     for (int i = 0; i < symbol_count; i++) {
         switch (symbol_table[i].type)
@@ -891,6 +925,9 @@ void print_type_table()
         case 3:
             c = 1;
             break;
+        case 4:
+            b = 1;
+            break;
         case 6:
             d++;
             break;
@@ -900,9 +937,10 @@ void print_type_table()
         }
     }
     printf("类型表为：\n");
-    if (i_ == 1)printf("i  ");
-    if (r == 1)printf("r  ");
-    if (c == 1)printf("c");
+    if (i_ == 1)printf("i ");
+    if (r == 1)printf("r "); 
+    if (b == 1)printf("b "); 
+    if (c == 1)printf("c "); 
     printf("\t|\n");
     for (int ii = 1; ii <= d;ii++)
     {
