@@ -64,7 +64,7 @@ while语句 → 当 左括号 条件 右括号 代码块
 #include "gramlyzer.h"
 #include "fopen.h"
 #include "semlyzer.h"
-
+#include "refine.h"
 
 int main() 
 {
@@ -98,7 +98,7 @@ int main()
 //==================================================
  
     // 执行语义分析并输出符号表结果
-    //analyze_program();
+    analyze_program();
 
     return 0;
 }
