@@ -830,9 +830,7 @@ void analyze_while_stmt() {
     match("(P 4)");  // 消耗右括号")"
 
     // 分析循环体
-    enter_scope();
     analyze_block();
-    exit_scope();
 
     // 生成无条件跳转回到循环开始处
     //generate_goto_quad(loop_start);
