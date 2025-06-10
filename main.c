@@ -65,6 +65,7 @@ while语句 → 当 左括号 条件 右括号 代码块
 #include "fopen.h"
 #include "semlyzer.h"
 #include "refine.h"
+#include "goal.h"
 
 int main() 
 {
