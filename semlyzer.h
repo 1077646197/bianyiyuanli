@@ -1,31 +1,150 @@
-/*·程序定义
-程序 → 声明列表
-声明列表 → 声明 声明列表 | ε
-声明 → 变量声明 | 赋值语句 | if语句 | while语句
+/* 翻译文法设计 
 
-// 变量声明
-变量声明 → 类型说明符 标识符 分号
-类型说明符 → 整型 | 空类型
+/* 程序结构 
+<程序> → <声明列表> {analyze_program(); }
 
-// 赋值语句
-赋值语句 → 标识符 赋值运算符 表达式 分号
+/* 声明列表 
+<声明列表> → <声明> <声明列表> {analyze_declaration_list(); }
+<声明列表> → ε{ ε }
 
-// 表达式（保持不变）
-表达式 → 加法表达式
-加法表达式 → 乘法表达式 (加法运算符 乘法表达式 | 减法运算符 乘法表达式)*
-乘法表达式 → 基本表达式 (乘法运算符 基本表达式 | 除法运算符 基本表达式)*
-基本表达式 → 标识符 | 数字 | 左括号 表达式 右括号
+/* 声明 
+<声明> → <变量声明> {analyze_var_decl(); }
+<声明> → <赋值语句> {analyze_assignment(); }
+<声明> → <if语句> {analyze_if_stmt(); }
+<声明> → <while语句> {analyze_while_stmt(); }
+<声明> → <struct语句> {analyze_struct_stmt(); }
 
-// if 语句
-if语句 → 如果 左括号 条件 右括号 代码块 (否则 代码块)?
-条件 → 表达式 关系运算符 表达式
-关系运算符 → 大于 | 小于 | 等于 | 不等于 | 大于等于 | 小于等于
+/* 变量声明 
+<变量声明> → <类型说明符> <标识符> <初始化> ? <分号> {
+    add_symbol(name, type, 0);
+    add_activation_record(name, type);
+    if (initialized) set_initialized(name);
+}
 
-// while 循环
-while语句 → 当 左括号 条件 右括号 代码块
+/* 类型说明符 
+<类型说明符> → 整型{ type = 1; }
+<类型说明符> → 浮点型{ type = 2; }
+<类型说明符> → 字符型{ type = 3; }
+<类型说明符> → 布尔型{ type = 4; }
+<类型说明符> → struct <标识符> { type = 6; }
 
-// 代码块
-代码块 → 左花括号 声明列表 右花括号
+/* 初始化 
+<初始化> → = <表达式>{
+    check_type_compatibility(lhs_type, expr_type);
+    generate_assign_quad(expr_result, lhs);
+    initialized = true;
+}
+
+/* 赋值语句 
+<赋值语句> → <标识符> = <表达式> <分号>{
+    check_variable(lhs);
+    generate_assign_quad(expr_result, lhs);
+}
+
+/* 表达式 
+<表达式> → <加法表达式> {expr_result = parse_expression_for_assignment(); }
+
+/* 加法表达式 
+<加法表达式> → <乘法表达式> {result = parse_term(); }
+<加法表达式> → <加法表达式> +<乘法表达式> {
+    generate_quad("+", result, operand, temp);
+    result = temp;
+}
+<加法表达式> → <加法表达式> -<乘法表达式> {
+    generate_quad("-", result, operand, temp);
+    result = temp;
+}
+
+/* 乘法表达式 
+<乘法表达式> → <基本表达式> {result = parse_factor(); }
+<乘法表达式> → <乘法表达式>* <基本表达式> {
+    generate_quad("*", result, operand, temp);
+    result = temp;
+}
+<乘法表达式> → <乘法表达式> / <基本表达式> {
+    generate_quad("/", result, operand, temp);
+    result = temp;
+}
+
+/* 基本表达式 
+<基本表达式> → <标识符> {check_variable(name); result = name; }
+<基本表达式> → <数字> {result = get_constant_quad(value, type); }
+<基本表达式> →(<表达式>) { result = parse_expression_for_assignment(); }
+
+/* if语句 
+<if语句> → if (<条件>) < 代码块 > <else子句> ? {
+    generate_if_quad(cond_result, target_true);
+    analyze_block();
+    if (has_else) {
+        generate_quad("el", "_", "_", "_");
+        analyze_block();
+    }
+    generate_quad("ie", "_", "_", "_");
+}
+
+/* 条件 
+<条件> → <表达式> <关系运算符> <表达式> {
+    generate_quad(rel_op, left, right, temp);
+    cond_result = temp;
+}
+
+/* 关系运算符 
+<关系运算符> → > {rel_op = ">"; }
+<关系运算符> → < {rel_op = "<"; }
+<关系运算符> → == {rel_op = "=="; }
+<关系运算符> → <= {rel_op = "<="; }
+<关系运算符> → != {rel_op = "!="; }
+<关系运算符> → >= {rel_op = ">="; }
+
+/* else子句 
+<else子句> → else <代码块> {has_else = true; }
+<else子句> → ε{ has_else = false; }
+
+/* while语句 
+<while语句> → while (<条件>) < 代码块 > {
+    generate_quad("wl", "_", "_", "_");
+    generate_while_quad(cond_result, exit_label);
+    analyze_block();
+    generate_quad("we", "_", "_", "_");
+}
+
+/* struct语句 
+<struct语句> → struct <标识符> { <成员列表> } <分号> {
+    add_symbol(name, 6, 3);
+    enter_scope();
+    analyze_struct_members();
+    exit_scope();
+}
+
+/* 成员列表 
+<成员列表> → <成员声明> <成员列表> {analyze_struct_members(); }
+<成员列表> → ε{ ε }
+
+/* 成员声明 
+<成员声明> → <类型说明符> <标识符> <初始化> ? <分号> {
+    add_symbol(name, type, 2);
+    add_activation_record(name, type);
+    if (initialized) generate_struct_init_quad();
+}
+
+/* 代码块 
+<代码块> →{ <声明列表> } {
+    enter_scope();
+    analyze_declaration_list();
+    exit_scope();
+}
+
+/* 辅助产生式 
+<标识符> → I{ name = identifiers[id - 1]; }
+<数字> → C1{ value = C1[cid - 1]; type = 1; }
+<数字> → C2{ value = C2[cid - 1]; type = 2; }
+<分号> →; { ε }
+<左括号> →({ ε }
+    <右括号> →) {
+    ε
+}
+<左花括号> →{ {ε}
+<右花括号> → } {ε}
 */
 
 #pragma once
