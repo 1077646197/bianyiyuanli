@@ -1,5 +1,5 @@
 #pragma once
-//本文件对已有四元式序列进行简单优化，支持连续数字运算的并
+//本文件对已有四元式序列进行简单优化，支持连续数字运算的合并，消除多余的四元式
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
