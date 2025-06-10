@@ -66,7 +66,7 @@ void print_symbol_table();                       // 打印符号表内容
 void print_quadruples();                         // 打印四元式列表
 void print_activation_records();                 // 打印活动记录表
 void print_constant_table();                     // 打印常数表
-void print_struct_table();
+void print_type_table();
 void typetrans(int type);                        // 将类型码转换为字符表示（i/r/c等）
 char* parse_condition_expression();
 void generate_while_quad(const char* cond, const char* target);
@@ -319,7 +319,7 @@ char* get_constant_quad(char* value, int type) {
     return value;
 }
 
-// 分析程序
+// 分析程序//////////////////////////////////////////////////////
 void analyze_program() {
     token_index = 0;
     current_token = lookahead(1);
@@ -331,9 +331,12 @@ void analyze_program() {
 
     // 输出中间结果
     print_symbol_table();
-    print_quadruples();
-    print_activation_records();
+    print_type_table();
     print_constant_table();
+    print_activation_records();
+    print_quadruples();
+    optimize_integer_quadruples();//优化
+    print_quadruples();  //优化后的四元式打印
 
     optimize_integer_quadruples();//优化
     print_quadruples();  //优化后的四元式打印
@@ -809,14 +812,24 @@ void analyze_block() {
 
 // 打印符号表（使用typetrans函数）
 void print_symbol_table() {
-    printf("\n符号表内容:\n");
+    printf("\n符号表内容:\t\t\t\t结构体表内容：\n");
     printf("名称\t类型\t种类\t作用域\n");
     for (int i = 0; i < symbol_count; i++) {
         printf("%s\t", symbol_table[i].name);
         typetrans(symbol_table[i].type);  // 使用原typetrans函数输出类型
         printf("\t");
         kindtrans(symbol_table[i].initialized);
-        printf("\t%d\n", symbol_table[i].scope);
+        printf("\t%d\t\t\t", symbol_table[i].scope);
+
+        if (symbol_table[i].initialized == 2)
+        {
+            printf("%s\t", symbol_table[i].name);
+            typetrans(symbol_table[i].type);  // 使用原typetrans函数输出类型
+            printf("\t");
+            kindtrans(symbol_table[i].initialized);
+            printf("\t%d", symbol_table[i].scope);
+        }
+        printf("\n");
     }
 }
 
@@ -853,19 +866,40 @@ void print_constant_table() {
     }
 }
 
-
-// 打印结构体表（使用typetrans函数）
-void print_struct_table() {
-    printf("\n结构体表:\n");
-    printf("名称\t类型\t种类\t作用域\n");
+//打印类型表
+void print_type_table()
+{
+    int i_, r, c=0;
+    int d = 0;
     for (int i = 0; i < symbol_count; i++) {
-        if (symbol_table[i].initialized == 2)
+        switch (symbol_table[i].type)
         {
-            printf("%s\t", symbol_table[i].name);
-            typetrans(symbol_table[i].type);  // 使用原typetrans函数输出类型
-            printf("\t");
-            kindtrans(symbol_table[i].initialized);
-            printf("\t%d\n", symbol_table[i].scope);
+        case 1:
+            i_ = 1;
+            break;
+        case 2:
+            r = 1;
+            break;
+        case 3:
+            c = 1;
+            break;
+        case 6:
+            d++;
+            break;
+        default:
+            printf("未知类型");
+            break;
         }
     }
+    printf("类型表为：\n");
+    if (i_ == 1)printf("i  ");
+    if (r == 1)printf("r  ");
+    if (c == 1)printf("c");
+    printf("\t|\n");
+    for (int ii = 1; ii <= d;ii++)
+    {
+        printf("d  \t|\n");
+    }
 }
+
+

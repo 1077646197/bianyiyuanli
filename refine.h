@@ -8,7 +8,6 @@
 
 
 
-
 // 辅助函数：判断操作数是否为整型常量
 int is_integer_constant(char* operand) {
     for (int i = 0; i < const_count; i++) {
