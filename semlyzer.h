@@ -215,7 +215,7 @@ extern void match(const char* token_type); // 匹配并消耗指定类型的Token
 typedef struct {
     char name[50];      // 变量名
     int type;           // 类型：1-int, 2-float, 3-char
-    int initialized;    // 是否已初始化（0-未初始化，1-已初始化）
+    int initialized;    // 种类
     int scope;          // 作用域层级（0-全局，1-第一层块，依此类推）
 } Symbol;
 
