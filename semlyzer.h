@@ -456,11 +456,6 @@ void analyze_program() {
     print_constant_table();
     print_activation_records();
     print_quadruples();
-    optimize_integer_quadruples();//优化
-    print_quadruples();  //优化后的四元式打印
-
-    optimize_integer_quadruples();//优化
-    print_quadruples();  //优化后的四元式打印
 
     //active_information();//暂未完成
     // 检查是否有未处理的Token
