@@ -193,7 +193,7 @@ void analyze_struct_stmt();
 void typetrans(int type);
 void optimize_integer_quadruples();      //优化
 void active_information();
-
+void analyze_function_stmt();
 
 
 // 外部变量声明（假设来自词法分析器）
@@ -266,6 +266,7 @@ void typetrans(int type) {
     case 4: printf("b"); break;  // bool类型
     case 5: printf("a"); break;  // 数组类型
     case 6: printf("d<——"); break;  // 结构体类型
+    case 7:  printf("—"); break;     //函数类型
     default: printf("?"); break; // 未知类型
     }
 }
@@ -491,6 +492,9 @@ void analyze_declaration_list() {
             analyze_struct_stmt();//struct
         }
         else if (strstr(current_token, "(P 16)")) {
+            break;
+        }
+        else if (strstr(current_token, "(K 2)")) {
             break;
         }
         else {
@@ -812,7 +816,7 @@ void analyze_if_stmt() {
     char* cond_result = parse_condition_expression();
 
     // 生成条件跳转四元式
-    char target_true[10], target_false[10];
+    char target_true[10];//char  target_false[10];
     sprintf(target_true, "T%d", quad_count);
     generate_if_quad(cond_result, target_true);  // 条件表达式结果作为条件
     //sprintf(target_false, "L%d", quad_count + 2);
@@ -959,6 +963,103 @@ void analyze_while_stmt() {
     generate_quad("we", "_", "_", "_");
 }
 
+
+// 分析函数声明语句
+void analyze_function_stmt() {
+    // 消耗"void"关键字
+    match("(K 2)");  // (K 2)是"void"的Token类型
+
+    // 获取函数名称
+    if (!strstr(current_token, "(I ")) {
+        semantic_error("函数名称出现错误");
+    }
+    int func_id;
+    sscanf(current_token, "(I %d)", &func_id);
+    char* func_name = identifiers[func_id - 1];
+    consume();  // 消耗函数名称
+
+    // 检查函数是否已定义
+    int func_symbol_idx = find_symbol(func_name, current_scope);
+    if (func_symbol_idx != -1) {
+        semantic_error("重复定义的函数");
+    }
+
+    // 添加函数到符号表（kind=5表示函数）
+    add_symbol(func_name, 7, 5);
+
+    // 消耗左括号"("
+    match("(P 3)");
+
+    // 解析参数列表
+    int param_count = 0;
+    while (current_token && !strstr(current_token, "(P 4)")) {
+        // 解析参数类型
+        int param_type = 0;
+        if (strstr(current_token, "(K 1)")) {  // int类型
+            param_type = 1;
+            consume();
+        }
+        else if (strstr(current_token, "(K 4)")) {  // float类型
+            param_type = 2;
+            consume();
+        }
+        else if (strstr(current_token, "(K 16)")) {  // char类型
+            param_type = 3;
+            consume();
+        }
+        else if (strstr(current_token, "(K 17)")) {  // bool类型
+            param_type = 4;
+            consume();
+        }
+        else {
+            semantic_error("无效的参数类型说明符");
+        }
+
+        // 检查是否为引用参数
+        int is_reference = 0;
+        if (current_token && strstr(current_token, "(P 20)")) {  // &符号
+            is_reference = 1;
+            consume();
+        }
+
+        // 获取参数名称
+        if (!strstr(current_token, "(I ")) {
+            semantic_error("期望参数却发现错误");
+        }
+        int param_id;
+        sscanf(current_token, "(I %d)", &param_id);
+        char* param_name = identifiers[param_id - 1];
+        consume();  // 消耗参数名称
+
+        // 添加参数到符号表（kind=7表示引用参数，kind=6表示值参数）
+        add_symbol(param_name, param_type, is_reference ? 7 : 6);
+
+        // 添加参数到活动记录表
+        add_activation_record(param_name, param_type);
+
+        param_count++;
+
+        //// 检查是否有更多参数
+        //if (current_token && strstr(current_token, "(P 12)")) {  // 逗号","
+        //    consume();
+        //}
+        //else if (!strstr(current_token, "(P 4)")) {  // 不是右括号，说明语法错误
+        //    semantic_error("参数列表格式错误");
+        //}
+    }
+
+    // 消耗右括号")"
+    match("(P 4)");
+
+    // 进入函数体作用域
+    enter_scope();
+
+    // 解析函数体（代码块）
+    analyze_block();
+
+    // 退出函数体作用域
+    exit_scope();
+}
 // 分析代码块
 void analyze_block() {
     match("(P 15)");  // 消耗左花括号"{"
