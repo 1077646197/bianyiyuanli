@@ -44,7 +44,7 @@ structºó×ºÉùÃ÷ ¡ú { ½á¹¹Ìå³ÉÔ±ÁĞ±í } ;    // ½á¹¹ÌåÉùÃ÷
 ±í´ïÊ½ ¡ú ¼Ó·¨±í´ïÊ½
 ¼Ó·¨±í´ïÊ½ ¡ú ³Ë·¨±í´ïÊ½ ( (+|-) ³Ë·¨±í´ïÊ½ )*
 ³Ë·¨±í´ïÊ½ ¡ú »ù±¾±í´ïÊ½ ( (*|/) »ù±¾±í´ïÊ½ )*
-+»ù±¾±í´ïÊ½ ¡ú ±êÊ¶·û( Êı×é·ÃÎÊºó×º | º¯Êıµ÷ÓÃºó×º )? | Êı×Ö | ( ±í´ïÊ½ )
++»ù±¾±í´ïÊ½ ¡ú ±êÊ¶·û( Êı×é·ÃÎÊºó×º | º¯Êıµ÷ÓÃºó×º )? | Êı×Ö | ( ±í´ïÊ½ )  | ×Ö·û³£Á¿ | ×Ö·û´®³£Á¿
 
 // ifÓï¾ä
 ifÓï¾ä ¡ú if ( Ìõ¼ş ) ´úÂë¿é (else²¿·Ö)?
@@ -136,7 +136,7 @@ void parse_expr_list_suffix();                        // ±í´ïÊ½ÁĞ±íºó×º ¡ú , ±í´
 void parse_expr();                                    // ±í´ïÊ½ ¡ú ¼Ó·¨±í´ïÊ½
 void parse_additive_expr();                           // ¼Ó·¨±í´ïÊ½ ¡ú ³Ë·¨±í´ïÊ½ ( (+|-) ³Ë·¨±í´ïÊ½ )*
 void parse_multiplicative_expr();                     // ³Ë·¨±í´ïÊ½ ¡ú »ù±¾±í´ïÊ½ ( (*|/) »ù±¾±í´ïÊ½ )*
-void parse_primary_expr();                            // »ù±¾±í´ïÊ½ ¡ú ±êÊ¶·û ( Êı×é·ÃÎÊºó×º | º¯Êıµ÷ÓÃºó×º )? | Êı×Ö | ( ±í´ïÊ½ )
+void parse_primary_expr();                            // »ù±¾±í´ïÊ½ ¡ú ±êÊ¶·û ( Êı×é·ÃÎÊºó×º | º¯Êıµ÷ÓÃºó×º )? | Êı×Ö | ( ±í´ïÊ½ )  | ×Ö·û³£Á¿ | ×Ö·û´®³£Á¿
 
 void parse_if_stmt();                                 // ifÓï¾ä ¡ú if ( Ìõ¼ş ) ´úÂë¿é (else²¿·Ö)?
 
@@ -579,7 +579,7 @@ void parse_multiplicative_expr() {
     }
 }
 
-// ½âÎö»ù±¾±í´ïÊ½£ºprimary_expr ¡ú ±êÊ¶·û ( Êı×é·ÃÎÊºó×º | º¯Êıµ÷ÓÃºó×º )? | Êı×Ö | (±í´ïÊ½)
+// ½âÎö»ù±¾±í´ïÊ½£ºprimary_expr ¡ú ±êÊ¶·û ( Êı×é·ÃÎÊºó×º | º¯Êıµ÷ÓÃºó×º )? | Êı×Ö | (±í´ïÊ½)  | ×Ö·û³£Á¿ | ×Ö·û´®³£Á¿
 void parse_primary_expr() {
     if (current_token && strstr(current_token, "(I ")) {
         match_prefix("(I "); // ÏûºÄ±êÊ¶·û
@@ -592,7 +592,7 @@ void parse_primary_expr() {
             parse_function_call();
         }
     }
-    else if (current_token && (strstr(current_token, "(C1 ") || strstr(current_token, "(C2 "))) {
+    else if (current_token && (strstr(current_token, "(C1 ") || strstr(current_token, "(C2 ") || strstr(current_token, "(CT ") || strstr(current_token, "(ST "))) {
         consume(); // ÏûºÄ³£Á¿
     }
     else if (current_token && strstr(current_token, "(P 3)")) { // "("

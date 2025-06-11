@@ -1,15 +1,8 @@
-
-
-//<输入输出语句> → printf(<字符串>); | scanf(<格式串>, <变量>);
-//<格式串> → "%d" | "%f" | "%c"
-
-
-
 #define _CRT_SECURE_NO_WARNINGS
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
- // 关键字表，第一列是关键字，第二列是编号
+// 关键字表，第一列是关键字，第二列是编号
 char* keywords[][2] = {
     {"int", "1"},
     {"void", "2"},
@@ -53,7 +46,8 @@ char* delimiters[][2] = {
     {">=","18"},
     {"--", "19"},
     {"[", "20"},
-    {"]", "21"}
+    {"]", "21"},
+    {"'", "22"}
 };
 int delimiter_count = sizeof(delimiters) / sizeof(delimiters[0]);
 
@@ -75,15 +69,12 @@ int ST_count = 0;
 char Token[100][20]; // Token串表
 int Token_count = 0;
 
-char bool[10][20]; // bool
-int bool_count = 0;
-
 int iscorret = 1;//是否正确
 
 // 向标识符表添加元素
 int add_to_identifiers(const char* str) {
     for (int i = 0; i < id_count; i++) {
-        if (strcmp(identifiers[i], str) == 0) return i+1;
+        if (strcmp(identifiers[i], str) == 0) return i + 1;
     }
     strcpy(identifiers[id_count], str);
     return ++id_count;
@@ -92,7 +83,7 @@ int add_to_identifiers(const char* str) {
 // 向常整数表添加元素
 int add_to_C1(const char* str) {
     for (int i = 0; i < C1_count; i++) {
-        if (strcmp(C1[i], str) == 0) return i+1;
+        if (strcmp(C1[i], str) == 0) return i + 1;
     }
     strcpy(C1[C1_count], str);
     return ++C1_count;
@@ -101,7 +92,7 @@ int add_to_C1(const char* str) {
 // 向常实数表添加元素
 int add_to_C2(const char* str) {
     for (int i = 0; i < C2_count; i++) {
-        if (strcmp(C2[i], str) == 0) return i+1;
+        if (strcmp(C2[i], str) == 0) return i + 1;
     }
     strcpy(C2[C2_count], str);
     return ++C2_count;
@@ -111,7 +102,7 @@ int add_to_C2(const char* str) {
 int add_to_CT(const char* str) {
     for (int i = 0; i < CT_count; i++) {
         if (strcmp(CT[i], str) == 0)
-            return i+1;
+            return i + 1;
     }
     strcpy(CT[CT_count], str);
     return ++CT_count;
@@ -121,7 +112,7 @@ int add_to_CT(const char* str) {
 int add_to_ST(const char* str) {
     for (int i = 0; i < ST_count; i++) {
         if (strcmp(ST[i], str) == 0)
-            return i+1;
+            return i + 1;
     }
     strcpy(ST[ST_count], str);
     return ++ST_count;
@@ -153,6 +144,35 @@ void scan(const char* source) {
         while (isspace(source[i])) i++; // 跳过空白字符
         if (i >= n) break;
 
+        // 处理字符常量
+        if (source[i] == '\'') {
+            i++;
+            // 检查字符常量是否为空
+            if (i >= n) {
+                iscorret = 0;
+                return;
+            }
+
+            // 读取字符常量
+            char ct[2] = { source[i], '\0' };
+            i++;
+
+            // 检查字符常量是否正确闭合
+            if (i >= n || source[i] != '\'') {
+                iscorret = 0;
+                return;
+            }
+            i++;
+
+            // 将字符常量添加到字符常量表并生成正确的Token
+            int index = add_to_CT(ct);
+            if (Token_count < 100) {
+                sprintf(Token[Token_count], "(CT %d)", index);
+                Token_count++;
+            }
+            continue;
+        }
+
         // 处理双字符界符
         if (i + 1 < n) {
             char two[3] = { source[i], source[i + 1], '\0' };
@@ -171,54 +191,17 @@ void scan(const char* source) {
         char one[2] = { source[i], '\0' };
         int delimiter_num = is_delimiter(one);
         if (delimiter_num) {
+            // 特殊处理单引号'，如果是字符常量的一部分，不单独作为界符处理
+            if (one[0] == '\'') {
+                i++;
+                continue;
+            }
+
             if (Token_count < 100) {
                 sprintf(Token[Token_count], "(P %d)", delimiter_num);
                 Token_count++;
             }
             i++;
-            continue;
-        }
-
-        // 处理关键字或标识符
-        if (isalpha(source[i]) || source[i] == '_') {
-            char id[50] = { 0 };
-            int j = 0;
-            while (i < n && (isalpha(source[i]) || isdigit(source[i]) || source[i] == '_')) {
-                id[j++] = source[i++];
-            }
-            id[j] = '\0';
-            int keyword_num = is_keyword(id);
-            if (keyword_num) {
-                if (Token_count < 100) {
-                    sprintf(Token[Token_count], "(K %d)", keyword_num);
-                    Token_count++;
-                }
-            }
-            else {
-                int index =  add_to_identifiers(id);
-                if (Token_count < 100) {
-                    sprintf(Token[Token_count], "(I %d)", index);
-                    Token_count++;
-                }
-            }
-            continue;
-        }
-
-        // 处理字符常量
-        if (source[i] == '\'') {
-            i++;
-            char ct[2] = { source[i], '\0' };
-            i++;
-            if (source[i] != '\'') {
-                iscorret = 0;
-                return;
-            }
-            i++;
-            int index = add_to_CT(ct);
-            if (Token_count < 100) {
-                sprintf(Token[Token_count], "(CT %d)", index);
-                Token_count++;
-            }
             continue;
         }
 
@@ -379,6 +362,33 @@ void scan(const char* source) {
             continue;
         }
 
+        // 处理关键字或标识符
+        if (isalpha(source[i]) || source[i] == '_') {
+            char id[50] = { 0 };
+            int j = 0;
+            while (i < n && (isalpha(source[i]) || isdigit(source[i]) || source[i] == '_')) {
+                id[j++] = source[i++];
+            }
+            id[j] = '\0';
+            int keyword_num = is_keyword(id);
+            if (keyword_num) {
+                if (Token_count < 100) {
+                    sprintf(Token[Token_count], "(K %d)", keyword_num);
+                    Token_count++;
+                }
+            }
+            else {
+                int index = add_to_identifiers(id);
+                if (Token_count < 100) {
+                    sprintf(Token[Token_count], "(I %d)", index);
+                    Token_count++;
+                }
+            }
+            continue;
+        }
+
+       
+        
         // 其他错误情况
         if (Token_count < 100) {
             iscorret = 0;
@@ -423,3 +433,4 @@ void print_tables() {
     }
     printf("\n");
 }
+
