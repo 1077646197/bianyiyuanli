@@ -491,10 +491,10 @@ void analyze_declaration_list() {
             analyze_struct_stmt();//struct
         }
         else if (strstr(current_token, "(P 16)")) {
-            break;
+            break;                         //最后的若为分号退出
         }
         else if (strstr(current_token, "(K 2)")) {
-            analyze_function_stmt();
+            analyze_function_stmt();//函数板块分析
         }
         else {
             printf("%s", Token[token_index]);
