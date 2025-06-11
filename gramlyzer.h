@@ -274,24 +274,36 @@ void parse_declaration_list() {
 // 注意：此处使用回溯法区分变量声明和函数声明
 void parse_declaration() {
     // 1. 处理变量或函数声明（int/void/float/char 开头）
-    if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")) {
+    if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 2)") ||
+        strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")) {
         // 保存当前状态用于回溯
         char* prev_token = current_token;
         int prev_index = token_index;
-        consume();
-        consume();
-        // 尝试匹配函数声明
-        if (current_token && strstr(current_token, "(P 3)")) { // "("
-            // 回溯并尝试匹配函数声明：
-            token_index = prev_index;
-            current_token = prev_token;
-            parse_function_decl();
-            return;
+        consume(); // 消耗基本类型（如int）
+
+        if (current_token && strncmp(current_token, "(I ", 3) == 0) {
+            consume(); // 消耗标识符（如getCharacter）
+
+            // 检查是否为函数声明（下一个Token是左括号"("）
+            if (current_token && strstr(current_token, "(P 3)")) {
+                // 回溯并解析函数声明
+                token_index = prev_index;
+                current_token = prev_token;
+                parse_function_decl();
+                return;
+            }
+            else {
+                // 回溯并解析变量声明
+                token_index = prev_index;
+                current_token = prev_token;
+                parse_var_decl();
+                return;
+            }
         }
         else {
-            token_index = prev_index;
-            current_token = prev_token;
-            parse_var_decl();
+            // 未找到标识符，报错
+            syntax_error("变量声明缺少标识符");
+            sync_to_statement_end();
             return;
         }
     }

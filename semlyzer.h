@@ -1,31 +1,150 @@
-/*·程序定义
-程序 → 声明列表
-声明列表 → 声明 声明列表 | ε
-声明 → 变量声明 | 赋值语句 | if语句 | while语句
+/* 翻译文法设计 
 
-// 变量声明
-变量声明 → 类型说明符 标识符 分号
-类型说明符 → 整型 | 空类型
+/* 程序结构 
+<程序> → <声明列表> {analyze_program(); }
 
-// 赋值语句
-赋值语句 → 标识符 赋值运算符 表达式 分号
+/* 声明列表 
+<声明列表> → <声明> <声明列表> {analyze_declaration_list(); }
+<声明列表> → ε{ ε }
 
-// 表达式（保持不变）
-表达式 → 加法表达式
-加法表达式 → 乘法表达式 (加法运算符 乘法表达式 | 减法运算符 乘法表达式)*
-乘法表达式 → 基本表达式 (乘法运算符 基本表达式 | 除法运算符 基本表达式)*
-基本表达式 → 标识符 | 数字 | 左括号 表达式 右括号
+/* 声明 
+<声明> → <变量声明> {analyze_var_decl(); }
+<声明> → <赋值语句> {analyze_assignment(); }
+<声明> → <if语句> {analyze_if_stmt(); }
+<声明> → <while语句> {analyze_while_stmt(); }
+<声明> → <struct语句> {analyze_struct_stmt(); }
 
-// if 语句
-if语句 → 如果 左括号 条件 右括号 代码块 (否则 代码块)?
-条件 → 表达式 关系运算符 表达式
-关系运算符 → 大于 | 小于 | 等于 | 不等于 | 大于等于 | 小于等于
+/* 变量声明 
+<变量声明> → <类型说明符> <标识符> <初始化> ? <分号> {
+    add_symbol(name, type, 0);
+    add_activation_record(name, type);
+    if (initialized) set_initialized(name);
+}
 
-// while 循环
-while语句 → 当 左括号 条件 右括号 代码块
+/* 类型说明符 
+<类型说明符> → 整型{ type = 1; }
+<类型说明符> → 浮点型{ type = 2; }
+<类型说明符> → 字符型{ type = 3; }
+<类型说明符> → 布尔型{ type = 4; }
+<类型说明符> → struct <标识符> { type = 6; }
 
-// 代码块
-代码块 → 左花括号 声明列表 右花括号
+/* 初始化 
+<初始化> → = <表达式>{
+    check_type_compatibility(lhs_type, expr_type);
+    generate_assign_quad(expr_result, lhs);
+    initialized = true;
+}
+
+/* 赋值语句 
+<赋值语句> → <标识符> = <表达式> <分号>{
+    check_variable(lhs);
+    generate_assign_quad(expr_result, lhs);
+}
+
+/* 表达式 
+<表达式> → <加法表达式> {expr_result = parse_expression_for_assignment(); }
+
+/* 加法表达式 
+<加法表达式> → <乘法表达式> {result = parse_term(); }
+<加法表达式> → <加法表达式> +<乘法表达式> {
+    generate_quad("+", result, operand, temp);
+    result = temp;
+}
+<加法表达式> → <加法表达式> -<乘法表达式> {
+    generate_quad("-", result, operand, temp);
+    result = temp;
+}
+
+/* 乘法表达式 
+<乘法表达式> → <基本表达式> {result = parse_factor(); }
+<乘法表达式> → <乘法表达式>* <基本表达式> {
+    generate_quad("*", result, operand, temp);
+    result = temp;
+}
+<乘法表达式> → <乘法表达式> / <基本表达式> {
+    generate_quad("/", result, operand, temp);
+    result = temp;
+}
+
+/* 基本表达式 
+<基本表达式> → <标识符> {check_variable(name); result = name; }
+<基本表达式> → <数字> {result = get_constant_quad(value, type); }
+<基本表达式> →(<表达式>) { result = parse_expression_for_assignment(); }
+
+/* if语句 
+<if语句> → if (<条件>) < 代码块 > <else子句> ? {
+    generate_if_quad(cond_result, target_true);
+    analyze_block();
+    if (has_else) {
+        generate_quad("el", "_", "_", "_");
+        analyze_block();
+    }
+    generate_quad("ie", "_", "_", "_");
+}
+
+/* 条件 
+<条件> → <表达式> <关系运算符> <表达式> {
+    generate_quad(rel_op, left, right, temp);
+    cond_result = temp;
+}
+
+/* 关系运算符 
+<关系运算符> → > {rel_op = ">"; }
+<关系运算符> → < {rel_op = "<"; }
+<关系运算符> → == {rel_op = "=="; }
+<关系运算符> → <= {rel_op = "<="; }
+<关系运算符> → != {rel_op = "!="; }
+<关系运算符> → >= {rel_op = ">="; }
+
+/* else子句 
+<else子句> → else <代码块> {has_else = true; }
+<else子句> → ε{ has_else = false; }
+
+/* while语句 
+<while语句> → while (<条件>) < 代码块 > {
+    generate_quad("wl", "_", "_", "_");
+    generate_while_quad(cond_result, exit_label);
+    analyze_block();
+    generate_quad("we", "_", "_", "_");
+}
+
+/* struct语句 
+<struct语句> → struct <标识符> { <成员列表> } <分号> {
+    add_symbol(name, 6, 3);
+    enter_scope();
+    analyze_struct_members();
+    exit_scope();
+}
+
+/* 成员列表 
+<成员列表> → <成员声明> <成员列表> {analyze_struct_members(); }
+<成员列表> → ε{ ε }
+
+/* 成员声明 
+<成员声明> → <类型说明符> <标识符> <初始化> ? <分号> {
+    add_symbol(name, type, 2);
+    add_activation_record(name, type);
+    if (initialized) generate_struct_init_quad();
+}
+
+/* 代码块 
+<代码块> →{ <声明列表> } {
+    enter_scope();
+    analyze_declaration_list();
+    exit_scope();
+}
+
+/* 辅助产生式 
+<标识符> → I{ name = identifiers[id - 1]; }
+<数字> → C1{ value = C1[cid - 1]; type = 1; }
+<数字> → C2{ value = C2[cid - 1]; type = 2; }
+<分号> →; { ε }
+<左括号> →({ ε }
+    <右括号> →) {
+    ε
+}
+<左花括号> →{ {ε}
+<右花括号> → } {ε}
 */
 
 #pragma once
@@ -40,7 +159,7 @@ char* parse_term();
 char* parse_factor();
 void semantic_error(const char* message);        // 输出语义错误信息并终止程序
 int find_symbol(const char* name, int scope);    // 在符号表中查找变量（返回索引或-1）
-void add_symbol(const char* name, int type,int kind);     // 添加新变量到符号表（检查重复）
+void add_symbol(const char* name, int type, int kind);     // 添加新变量到符号表（检查重复）
 void check_variable(const char* name);           // 检查变量是否存在且已初始化
 void set_initialized(const char* name);          // 标记变量为已初始化状态
 int get_type(const char* name);                  // 获取变量的类型码
@@ -66,11 +185,16 @@ void print_symbol_table();                       // 打印符号表内容
 void print_quadruples();                         // 打印四元式列表
 void print_activation_records();                 // 打印活动记录表
 void print_constant_table();                     // 打印常数表
+void print_type_table();
 void typetrans(int type);                        // 将类型码转换为字符表示（i/r/c等）
-char* parse_condition_expression();         
+char* parse_condition_expression();
 void generate_while_quad(const char* cond, const char* target);
 void analyze_struct_stmt();
 void typetrans(int type);
+void optimize_integer_quadruples();      //优化
+void active_information();
+
+
 
 // 外部变量声明（假设来自词法分析器）
 extern char identifiers[100][50];    // 标识符表
@@ -91,7 +215,7 @@ extern void match(const char* token_type); // 匹配并消耗指定类型的Token
 typedef struct {
     char name[50];      // 变量名
     int type;           // 类型：1-int, 2-float, 3-char
-    int initialized;    // 是否已初始化（0-未初始化，1-已初始化）
+    int initialized;    // 种类
     int scope;          // 作用域层级（0-全局，1-第一层块，依此类推）
 } Symbol;
 
@@ -178,7 +302,7 @@ int find_symbol(const char* name, int scope) {
 }
 
 // 添加变量到符号表
-void add_symbol(const char* name, int type, int kind ) {
+void add_symbol(const char* name, int type, int kind) {
     if (find_symbol(name, current_scope) != -1) {
         semantic_error("重复定义的变量");
     }
@@ -226,8 +350,8 @@ int check_expression_type() {
     if (current_token && strstr(current_token, "(I ")) {
         int id;
         sscanf(current_token, "(I %d)", &id);
-        return get_type(identifiers[id-1]);  // 变量类型
-    } 
+        return get_type(identifiers[id - 1]);  // 变量类型
+    }
     return 0;  // 未知类型
 }
 
@@ -316,7 +440,7 @@ char* get_constant_quad(char* value, int type) {
     return value;
 }
 
-// 分析程序
+// 分析程序//////////////////////////////////////////////////////
 void analyze_program() {
     token_index = 0;
     current_token = lookahead(1);
@@ -328,10 +452,17 @@ void analyze_program() {
 
     // 输出中间结果
     print_symbol_table();
-    print_quadruples();
-    print_activation_records();
+    print_type_table();
     print_constant_table();
+    print_activation_records();
+    print_quadruples();
+    optimize_integer_quadruples();//优化
+    print_quadruples();  //优化后的四元式打印
 
+    optimize_integer_quadruples();//优化
+    print_quadruples();  //优化后的四元式打印
+
+    //active_information();//暂未完成
     // 检查是否有未处理的Token
     if (token_index < Token_count) {
         semantic_error("程序末尾有多余Token");
@@ -342,10 +473,10 @@ void analyze_program() {
 // 分析声明列表
 void analyze_declaration_list() {
     while (current_token && token_index < Token_count) {
-        if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")) {
+        if (strstr(current_token, "(K 1)") || strstr(current_token, "(K 4)") || strstr(current_token, "(K 16)")|| strstr(current_token, "(K 17)")) {
             analyze_var_decl();  // 变量声明
 
-               //后续可以添加函数判断
+            //后续可以添加函数判断
         }
         else if (strstr(current_token, "(I ")) {
             analyze_statement();  // 赋值语句或函数调用
@@ -364,7 +495,7 @@ void analyze_declaration_list() {
         }
         else {
             printf("%s", Token[token_index]);
-            semantic_error("不支持的语句类型1111111");
+            semantic_error("不支持的语句类型");
         }
     }
 }
@@ -384,6 +515,10 @@ void analyze_var_decl() {
         type = 3;
         consume();
     }
+    else if (strstr(current_token, "(K 17)")) {  // char类型（仅添加符号表，不处理常数表）
+        type = 4;
+        consume();
+    }
     else {
         semantic_error("无效的类型说明符");
     }
@@ -394,7 +529,7 @@ void analyze_var_decl() {
         char name[50];
         strcpy(name, identifiers[id - 1]);  // 从标识符表获取名称
 
-        add_symbol(name, type,1);            // 添加到符号表
+        add_symbol(name, type, 1);            // 添加到符号表
         add_activation_record(name, type);  // 添加到活动记录表
 
         consume();  // 消耗标识符Token
@@ -406,12 +541,24 @@ void analyze_var_decl() {
             if (expr_type != type && expr_type != 0) {
                 semantic_error("类型不匹配");
             }
-            // 生成赋值四元式（仅处理int和float，移除char分支）
+            // 生成赋值四元式（仅处理int和float，bool，移除char分支）
             if (strstr(current_token, "(C1 ")) {  // 整型常量（对应int）
                 int cid;
                 sscanf(current_token, "(C1 %d)", &cid);
-                char* const_val = get_constant_quad(C1[cid - 1], 1);
-                generate_assign_quad(const_val, name);
+                if (type == 4 && (C1[cid - 1][0] == '0' || C1[cid - 1][0] == '1'))
+                {
+                    char* const_val = get_constant_quad(C1[cid - 1], 1);
+                    generate_assign_quad(const_val, name);
+                }
+                else if (type == 1)
+                {
+                    char* const_val = get_constant_quad(C1[cid - 1], 1);
+                    generate_assign_quad(const_val, name);
+                }
+                else 
+                {
+                     semantic_error("错误的bool声明");
+                }
             }
             else if (strstr(current_token, "(C2 ")) {  // 浮点常量（对应float）
                 int cid;
@@ -424,6 +571,7 @@ void analyze_var_decl() {
                 sscanf(current_token, "(I %d)", &vid);
                 generate_assign_quad(identifiers[vid - 1], name);
             }
+
             // 移除char类型的CT处理分支
             set_initialized(name);  // 标记为已初始化
             consume();  // 消耗表达式Token
@@ -449,7 +597,7 @@ void analyze_assignment() {
     char* expr_quad = parse_expression_for_assignment();
 
     // 生成赋值四元式（右值结果 -> 左值变量）
-   
+
     generate_assign_quad(expr_quad, lhs_name);
     match("(P 13)");  // 消耗分号";"
 }
@@ -558,7 +706,7 @@ void analyze_struct_stmt() {
     consume();  // 消耗结构体名称
 
     // 检查结构体是否已定义
-    int struct_type_id = find_symbol(struct_name,current_scope);
+    int struct_type_id = find_symbol(struct_name, current_scope);
     if (struct_type_id != -1) {
         semantic_error(struct_name);
     }
@@ -583,6 +731,13 @@ void analyze_struct_stmt() {
             type = 3;
             consume();
         }
+        else if (strstr(current_token, "(K 17)")) {  // char类型（仅添加符号表，不处理常数表）
+            type = 4;
+            consume();
+        }
+        else if (strstr(current_token, "(K 7)")) {  // char类型（仅添加符号表，不处理常数表）
+            //banalyze_struct_stmt();//struct
+        }
         else {
             semantic_error("无效的类型说明符");
         }
@@ -593,7 +748,7 @@ void analyze_struct_stmt() {
             char name[50];
             strcpy(name, identifiers[id - 1]);  // 从标识符表获取名称
 
-            add_symbol(name, type,2);            // 添加到符号表
+            add_symbol(name, type, 2);            // 添加到符号表
             add_activation_record(name, type);  // 添加到活动记录表
 
             consume();  // 消耗标识符Token
@@ -609,8 +764,20 @@ void analyze_struct_stmt() {
                 if (strstr(current_token, "(C1 ")) {  // 整型常量（对应int）
                     int cid;
                     sscanf(current_token, "(C1 %d)", &cid);
-                    char* const_val = get_constant_quad(C1[cid - 1], 1);
-                    generate_assign_quad(const_val, name);
+                    if (type == 4 && (C1[cid - 1][0] == '0' || C1[cid - 1][0] == '1'))
+                    {
+                        char* const_val = get_constant_quad(C1[cid - 1], 1);
+                        generate_assign_quad(const_val, name);
+                    }
+                    else if (type == 1)
+                    {
+                        char* const_val = get_constant_quad(C1[cid - 1], 1);
+                        generate_assign_quad(const_val, name);
+                    }
+                    else
+                    {
+                        semantic_error("错误的bool声明");
+                    }
                 }
                 else if (strstr(current_token, "(C2 ")) {  // 浮点常量（对应float）
                     int cid;
@@ -627,6 +794,7 @@ void analyze_struct_stmt() {
             }
             match("(P 13)");  // 消耗分号";"
         }
+
         else {
             semantic_error("变量声明缺少标识符");
         }
@@ -671,19 +839,19 @@ void analyze_if_stmt() {
         // 生成跳转到else后代码的指令
         char target_end[10];
         sprintf(target_end, "T%d", quad_count + 1);
-       // generate_goto_quad(target_end);
+        // generate_goto_quad(target_end);
 
-        // 回填else分支的目标
+         // 回填else分支的目标
         strcpy(quad[quad_count - 2].result, target_end);
 
         consume();  // 消耗"else"关键字
         analyze_block();
     }
 
-   /*else {
-        // 回填else分支的目标（如果没有else，则跳转到if块之后）
-        strcpy(quad[quad_count - 1].result, target_false);
-    }*/ 
+    /*else {
+         // 回填else分支的目标（如果没有else，则跳转到if块之后）
+         strcpy(quad[quad_count - 1].result, target_false);
+     }*/
     generate_quad("ie", "_", "_", "_");
 }
 
@@ -695,11 +863,11 @@ char* parse_condition_expression() {
     // 检查是否存在关系运算符
     if (current_token &&
         (strstr(current_token, "(P 5)") ||  // ==
-         strstr(current_token, "(P 6)") ||  // <=
-         strstr(current_token, "(P 7)") ||  // <
-         strstr(current_token, "(P 10)")||  //>
-         strstr(current_token, "(P 17)") || //!=
-         strstr(current_token, "(P 18)") //>=
+            strstr(current_token, "(P 6)") ||  // <=
+            strstr(current_token, "(P 7)") ||  // <
+            strstr(current_token, "(P 10)") ||  //>
+            strstr(current_token, "(P 17)") || //!=
+            strstr(current_token, "(P 18)") //>=
             ))
     {
 
@@ -781,9 +949,7 @@ void analyze_while_stmt() {
     match("(P 4)");  // 消耗右括号")"
 
     // 分析循环体
-    enter_scope();
     analyze_block();
-    exit_scope();
 
     // 生成无条件跳转回到循环开始处
     //generate_goto_quad(loop_start);
@@ -804,14 +970,24 @@ void analyze_block() {
 
 // 打印符号表（使用typetrans函数）
 void print_symbol_table() {
-    printf("\n符号表内容:\n");
+    printf("\n符号表内容:\t\t\t\t结构体表内容：\n");
     printf("名称\t类型\t种类\t作用域\n");
     for (int i = 0; i < symbol_count; i++) {
         printf("%s\t", symbol_table[i].name);
         typetrans(symbol_table[i].type);  // 使用原typetrans函数输出类型
         printf("\t");
         kindtrans(symbol_table[i].initialized);
-        printf("\t%d\n",symbol_table[i].scope);
+        printf("\t%d\t\t\t", symbol_table[i].scope);
+
+        if (symbol_table[i].initialized == 2)
+        {
+            printf("%s\t", symbol_table[i].name);
+            typetrans(symbol_table[i].type);  // 使用原typetrans函数输出类型
+            printf("\t");
+            kindtrans(symbol_table[i].initialized);
+            printf("\t%d", symbol_table[i].scope);
+        }
+        printf("\n");
     }
 }
 
@@ -830,7 +1006,7 @@ void print_activation_records() {
     printf("\n活动记录表:\n");
     printf("变量名\t大小\t偏移量\t\n");
     for (int i = 0; i < activ_count; i++) {
-        printf("%s",activ_rec[i].name);
+        printf("%s", activ_rec[i].name);
         printf("\t%d\t%d\t\n",
             activ_rec[i].size,
             activ_rec[i].offset);
@@ -847,4 +1023,46 @@ void print_constant_table() {
         printf("\n");
     }
 }
-//总打印函数
+
+//打印类型表
+void print_type_table()
+{
+    int i_,r,c,b;
+    i_ = r = c = b = 0;
+    int d = 0;
+    for (int i = 0; i < symbol_count; i++) {
+        switch (symbol_table[i].type)
+        {
+        case 1:
+            i_ = 1;
+            break;
+        case 2:
+            r = 1;
+            break;
+        case 3:
+            c = 1;
+            break;
+        case 4:
+            b = 1;
+            break;
+        case 6:
+            d++;
+            break;
+        default:
+            printf("未知类型");
+            break;
+        }
+    }
+    printf("类型表为：\n");
+    if (i_ == 1)printf("i ");
+    if (r == 1)printf("r "); 
+    if (b == 1)printf("b "); 
+    if (c == 1)printf("c "); 
+    printf("\t|\n");
+    for (int ii = 1; ii <= d;ii++)
+    {
+        printf("d  \t|\n");
+    }
+}
+
+
