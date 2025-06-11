@@ -194,12 +194,7 @@ void typetrans(int type);
 void optimize_integer_quadruples();      //ÓÅ»¯
 void active_information();
 void analyze_function_stmt();
-<<<<<<< HEAD
-
-=======
 void analyze_array_decl();
->>>>>>> ç®€å•voidå‡½æ•°è¯†åˆ«å‡½æ•°é¢„å¤„ç?
-
 // Íâ²¿±äÁ¿ÉùÃ÷£¨¼ÙÉèÀ´×Ô´Ê·¨·ÖÎöÆ÷£©
 extern char identifiers[100][50];    // ±êÊ¶·û±í
 extern int id_count;                 // ±êÊ¶·ûÊýÁ¿
@@ -469,6 +464,7 @@ void analyze_program() {
 
     //active_information();//ÔÝÎ´Íê³É
     // ¼ì²éÊÇ·ñÓÐÎ´´¦ÀíµÄToken
+    printf("%s", Token[token_index]);
     if (token_index < Token_count) {
         semantic_error("³ÌÐòÄ©Î²ÓÐ¶àÓàToken");
     }
@@ -498,11 +494,7 @@ void analyze_declaration_list() {
             break;
         }
         else if (strstr(current_token, "(K 2)")) {
-<<<<<<< HEAD
-=======
             analyze_function_stmt();
->>>>>>> ç®€å•voidå‡½æ•°è¯†åˆ«å‡½æ•°é¢„å¤„ç?
-            break;
         }
         else {
             printf("%s", Token[token_index]);
@@ -1145,29 +1137,13 @@ void analyze_function_stmt() {
         //else if (!strstr(current_token, "(P 4)")) {  // ²»ÊÇÓÒÀ¨ºÅ£¬ËµÃ÷Óï·¨´íÎó
         //    semantic_error("²ÎÊýÁÐ±í¸ñÊ½´íÎó");
         //}
-<<<<<<< HEAD
-=======
         if (strstr(current_token, "(P 12)"))
             match("(P 12)");
->>>>>>> ç®€å•voidå‡½æ•°è¯†åˆ«å‡½æ•°é¢„å¤„ç?
     }
-
     // ÏûºÄÓÒÀ¨ºÅ")"
     match("(P 4)");
-
-<<<<<<< HEAD
-    // ½øÈëº¯ÊýÌå×÷ÓÃÓò
-    enter_scope();
-
     // ½âÎöº¯ÊýÌå£¨´úÂë¿é£©
     analyze_block();
-
-    // ÍË³öº¯ÊýÌå×÷ÓÃÓò
-    exit_scope();
-=======
-    // ½âÎöº¯ÊýÌå£¨´úÂë¿é£©
-    analyze_block();
->>>>>>> ç®€å•voidå‡½æ•°è¯†åˆ«å‡½æ•°é¢„å¤„ç?
 }
 // ·ÖÎö´úÂë¿é
 void analyze_block() {
