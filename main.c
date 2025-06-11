@@ -103,5 +103,7 @@ int main()
    //=================================================
    optimize_integer_quadruples();//优化
    print_quadruples();  //优化后的四元式打印
+   partition_basic_blocks();//基本块划分
+   print_basic_blocks();//打印划分
     return 0;
 }
