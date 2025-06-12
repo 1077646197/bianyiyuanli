@@ -100,7 +100,7 @@ int main()
  
     // 执行语义分析并输出符号表结果
    analyze_program();
-   //=================================================
+ //=================================================
    optimize_integer_quadruples();//优化
    print_quadruples();  //优化后的四元式打印
    partition_basic_blocks();//基本块划分
